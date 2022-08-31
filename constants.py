@@ -19,3 +19,6 @@ COL_NAME = PARAMETERS
 
 # inner file name
 INNER_FILE_NAME = 'all results.txt'
+
+# number of lines that should be in 1 machine's output
+EXPECTED_LINES = 95

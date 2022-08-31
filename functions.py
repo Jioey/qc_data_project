@@ -6,7 +6,7 @@ from mailmerge import MailMerge
 
 from utils import *
 from constants import *
-from gui import getTester
+from gui import testerName
 
 """##getData(f)"""
 # gets data from f, disruptive
@@ -134,9 +134,6 @@ def generateDocuments():
   # keeping count for number of machines
   counter = 1
 
-  # initial of tester
-  tester = getTester()
-
   # keep running until file runs out
   while f[0] != ['']:
     print("\nMachine %s --------------------------------------------------------------------" % counter)
@@ -156,7 +153,7 @@ def generateDocuments():
       print(i)
 
     # write data
-    writeData(idInfo, cleanData, tester)
+    writeData(idInfo, cleanData, testerName.get())
     counter += 1
 
     # DEBUG: print remaining data

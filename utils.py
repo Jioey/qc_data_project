@@ -2,8 +2,7 @@
 # Util functions
 """
 # import PARAMETERS
-from constants import INNER_FILE_NAME, PARAMETERS
-from tkinter import END
+from constants import PARAMETERS
 
 """openFile()"""
 def openTextFile():
@@ -123,29 +122,3 @@ def combineTestInfo(test1, test2):
 
   # return combined list
   return tempList
-
-def writeTextFile(text):
-   # open file, in append mode
-   f = open(INNER_FILE_NAME, 'a')
-   # write to file
-   f.write(text)
-   # close file
-   f.close()
-
-# empties 'all results.txt'
-def clearTextFile():
-   f = open(INNER_FILE_NAME,'w')
-   f.close()
-
-def save(T):
-   # TODO: check if input is enough lines
-
-   # write to file
-   writeTextFile(T.get("1.0", "end-1c"))
-
-   # clears text box
-   T.delete('1.0', END)
-
-def closeWindow(window):
-    window.destroy()
-    window.update()
