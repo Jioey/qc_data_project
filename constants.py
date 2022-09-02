@@ -17,8 +17,6 @@ dictSymbol = {'Small':'1+', 'Moderate':'2+', 'Large':'3+', 'Positive':'(+)', 'Ne
 ROW_NAME = ['Control', 'KOVA I', 'KOVA II', 'KOVA III']
 COL_NAME = PARAMETERS
 
-# inner file name
-INNER_FILE_NAME = 'all results.txt'
-
-# number of lines that should be in 1 machine's output
-EXPECTED_LINES = 95
+# document template names
+COA_TEMPLATE_NAME = 'COA Template.docx'
+LABSHEET_TEMPLATE_NAME = 'Lab Worksheet Template.docx'

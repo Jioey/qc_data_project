@@ -5,7 +5,7 @@ OBX|1|ST|1|LEU|      * Large|||||||||||||
 OBX|2|ST|2|NIT|   * Positive|||||||||||||
 OBX|3|ST|3|URO| *>=8.0 EU/dL|||||||||||||
 OBX|4|ST|4|PRO| *>=300 mg/dL|||||||||||||
-OBX|5|ST|5|pH |          7.5|||||||||||||
+OBX|5|ST|5|pH |          12.5|||||||||||||
 OBX|6|ST|6|BLD|      * Large|||||||||||||
 OBX|7|ST|7|SG |        1.020|||||||||||||
 OBX|8|ST|8|KET|  *>=80 mg/dL|||||||||||||
@@ -81,4 +81,5 @@ OBX|7|ST|7|SG |        1.015|||||||||||||
 OBX|8|ST|8|KET|     Negative|||||||||||||
 OBX|9|ST|9|BIL|     Negative|||||||||||||
 OBX|10|ST|10|GLU|     Negative|||||||||||||
+
 

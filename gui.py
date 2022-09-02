@@ -3,89 +3,108 @@ Take input from user
 Error handling
 Send to txtWriter
 """
+# pseudo code
+# open file button -> displays file name when loaded
+# enttry where usr enters tester name
+# submit button to generate the files
 
-from tkinter import *
-from txtWriter import save
-from constants import EXPECTED_LINES
+from tkinter import Button, Frame, Label, Tk, Entry, Text, messagebox, END
+from tkinter import filedialog
+from functions import generateDocuments
 
-# root of tkinter window
-root = Tk()
+class Example(Frame):
+   # using instance variable to store filename
+   filename = ''
 
-# store tester info
-testerName = StringVar()
+   # init
+   def __init__(self):
+      super().__init__()
+      self.initUI()
 
-# TODO: organize widgets
+   # initializing the gui
+   def initUI(self):
+      # packing self (the Frame)
+      self.master.title("TECO")
+      self.pack()
+      # another frame for tester input
+      testerFrame = Frame(self)
 
-# main window that pastes results in
-def mainWindow():
-   # header of window
-   root.title("TECO")
-   # default window size of gui
-   root.geometry("900x500")
+      # button to load file
+      loadButton = Button(self, text="Load File", command=self.onOpen)
+      # displayed text to prompt tester name
+      testerLabel = Label(testerFrame, text='Tester name: ')
+      # text Entry to enter tester name
+      testerEntry = Entry(testerFrame)
+      # submit button that triggers generateDocuments and clears text widgets
+      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), testerEntry.delete(0, END), self.txt.delete(1.0, END)])
+      # Text widget that displays loaded file
+      self.txt = Text(self)
 
-   # frames for placing widgets and pack them
-   textFrame = Frame(root)
-   buttonsFrame = Frame(root)
-   textFrame.pack()
-   buttonsFrame.pack()
+      # packing
+      self.txt.pack(ipadx=3, ipady=3, fill='both', expand=True)
+      testerFrame.pack(fill='x')
+      testerLabel.pack(ipadx=15, fill='both', side='left')
+      testerEntry.pack(fill='both', side='right', expand=True)
+      loadButton.pack(fill='both')      
+      submitButton.pack(fill='both')
 
-   # Text Frame
-   # text for instructions
-   l1 = Label(textFrame, 
-         text ="Instructions: \nPaste (Ctrl+V) test results in here\n Hit save to save on text file (clears the textbox)\n Hit next when ready to proceed",
-         font=("Ariel", 15))
-   # text box for data
-   T = Text(textFrame, width='90', height='15')
-   vsb = Scrollbar(textFrame, orient="vertical", command=T.yview)
-   T.configure(yscrollcommand=vsb.set)
-   # packing
-   l1.pack()
-   T.pack(side="left")
-   vsb.pack(side="right", fill="y")
 
-   # Buttons Frame
-   # text for tester name
-   l2 = Label(buttonsFrame, text="Tester name:")
-   # entry for tester name 
-   E1 = Entry(buttonsFrame, textvariable=testerName)
-   # 'lambda:' also allows to use args in func for command
-   # 'Save' Button - when clicked, writes input to txt file, clear input, then shows a save confirmation
-   # b1 = Button(buttonsFrame, text = "Save", command=lambda:[save(getTextInput(T)), T.delete('1.0', END), showString('File saved')]) - maybe don't need save feature?
-   # 'Next' Button - continues to handling/checking input errors
-   b2 = Button(buttonsFrame, text = "Next", command=lambda:[inputErrorHandling(getTextInput(T)), T.delete('1.0', END)])
-   # packing everything (in order of displaying - important)
-   l2.grid(row=0, column=0)
-   E1.grid(row=0, column=1)
-   # b1.grid(row=1, column=0)
-   b2.grid(row=1, column=1) 
+   # triggers when load button is hit
+   # saves filename, reads the file and displays on Text widget
+   def onOpen(self):
+      # file types choosable in File Explorer
+      ftypes = [('text files', '*.txt'), ('All files', '*')]
+      # file dialog
+      dlg = filedialog.Open(self, filetypes = ftypes)
+      # reads filename
+      fl = dlg.show()
 
-   # mainloops tells the code to keep displaying 
+      # if read filename is not empty
+      if fl != '':
+         # store filename in instance var
+         self.filename = fl
+         # opens the file
+         with open(fl, "r") as f:
+            # reads it and store it
+            text = f.read()
+         # displays read text on Text widget
+         self.txt.delete(1.0, END)
+         self.txt.insert(END, text)
+
+   # triggers when submit button is hit
+   # runs generateDocuments with the needed info entered from the gui
+   # raises Exception if either filename or tester entry is empty
+   def onSubmit(self, tester):
+      print("OnSubmit: ")
+      print("filename: %s; tester: %s" % (self.filename, tester))
+
+      if (self.filename == ''):
+         messagebox.showerror("Error", "No file has been loaded")
+         raise Exception("filename empty")
+      elif (tester == ''):
+         messagebox.showerror("Error", "No tester name has been entered")
+         raise Exception("tester empty")
+      else:
+         try:
+            generateDocuments(self.filename, tester)
+            messagebox.showinfo("TECO",  "Documents generated successfully")
+         except Exception as e:
+            # TODO: show/hide terminal when run?
+            errorMsg = "Code error: %s; close window and see full error (traceback) in terminal" % e
+            messagebox.showerror("Error", errorMsg)
+
+
+# main function that runs the gui
+def main():
+   # root of tkinter
+   root = Tk()
+   # creating Frame instance
+   ex = Example()
+   # setting window geometry
+   root.geometry("680x470+400+150")
+   # mainloop continuosly shows window until closed
    root.mainloop()
 
-# checks and handles input errors
-def inputErrorHandling(input):
-   try:
-      lines = input.splitlines()
-      # DEBUG
-      # for line in lines:
-      #    print(line)
-      lineCount = len(lines)
-      extraLines = lineCount%EXPECTED_LINES
-      if (extraLines != 0):
-         raise Exception()
-      save(input)
-   except:
-      showString("Incorrect line numbers! Should be divisible by %i but there are %i extra lines, and %i lines in total." % (EXPECTED_LINES, extraLines, lineCount))
-      
-# gets all input text in the text box T
-def getTextInput(T):
-   return T.get("1.0", "end-1c")
-
-def showString(string):
-   # TODO: show on gui
-   print(string)
-
-# closes window
-def closeWindow(window):
-    window.destroy()
-    window.update()
+# shows warning text window
+def warn(msg):
+   messagebox.showwarning('Warning - Bad Machine', msg)

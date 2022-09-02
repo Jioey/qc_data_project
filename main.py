@@ -10,6 +10,7 @@ Original file is located at
 """
 
 """##Packages"""
-from gui import mainWindow
+from gui import main
 
-mainWindow()
+if __name__ == '__main__':
+    main()

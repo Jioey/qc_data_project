@@ -1,12 +1,13 @@
 """
 #Main Functions
 """
-import lxml
-from mailmerge import MailMerge
-
 from utils import *
 from constants import *
-from gui import testerName
+
+# instance (kinda) var to store serial number in case of error
+sn = 0
+isErrorMachine = False
+
 
 """##getData(f)"""
 # gets data from f, disruptive
@@ -21,6 +22,8 @@ def getData(f):
   # line 0 - serial number
   currentLine = f.pop(0)
   serialNum = currentLine[40:53]
+  global sn
+  sn = serialNum
 
   # line 1 - no info
   f.pop(0)
@@ -87,9 +90,9 @@ def processData(rawData):
   # CATCH MACHINE ERRORS
   # run testParameters for each control
   # then update data for any 'BAD' inserts
-  data = testParameters(data, 0, allowedRangesI) # KOVA I
-  data = testParameters(data, 2, allowedRangesII) # KOVA II
-  data = testParameters(data, 4, allowedRangesIII) # KOVA III
+  data = testParameters(data, 0, allowedRangesI, sn) # KOVA I
+  data = testParameters(data, 2, allowedRangesII, sn) # KOVA II
+  data = testParameters(data, 4, allowedRangesIII, sn) # KOVA III
 
   # combine the two tests and return it
   return [combineTestInfo(data[0], data[1]), 
@@ -100,36 +103,18 @@ def processData(rawData):
 """##writeData(idInfo, cleanData)"""
 # writes data to new word doc using template
 def writeData(idInfo, cleanData, tester):
-  COA_Template = 'COA Template.docx'
-  COA = MailMerge(COA_Template)
-  # DEBUG: print(COA_Template.get_merge_fields())
+  testerInitial = ''.join(s[0].upper() for s in tester.split(' '))
 
-  # merge id info & tester
-  COA.merge(
-    **{'serial_number':idInfo[0],
-    'date':idInfo[1],
-    'tester':tester}
-    )
+  # mail merge on COA w tester's initial
+  mailmergeToTemplate(COA_TEMPLATE_NAME, idInfo, cleanData, testerInitial)
+  # mail merge on Lab Worksheet w tester's full name
+  mailmergeToTemplate(LABSHEET_TEMPLATE_NAME, idInfo, cleanData, tester)  
 
-  # for each of the 3 controls 
-  kovaNumber = 'I'
-  for i in range(3):
-    # for each parameter in each control
-    for j in range(10):
-      # concatinate merge field/name; starting with 'KOVA-I_LEU' (KOVA-[controlNumber]_[parameterName])
-      mergeField = 'KOVA-' + kovaNumber + '_' + PARAMETERS[j]
-      # merge added field to corresponding data of index
-      COA.merge(**{mergeField:cleanData[i][j]})
-    kovaNumber = kovaNumber + 'I'
-
-  # write new file - serialNum + .docx
-  COA_filename = 'COAs/' + str(idInfo[0]) + '.docx'
-  COA.write(COA_filename)
 
 """Generates documents and pulls all functions together (driver function?)"""
-def generateDocuments(): 
+def generateDocuments(filename, tester): 
   # gets list of string from openning the inner text file
-  f = openTextFile()
+  f = openTextFile(filename)
 
   # keeping count for number of machines
   counter = 1
@@ -153,7 +138,7 @@ def generateDocuments():
       print(i)
 
     # write data
-    writeData(idInfo, cleanData, testerName.get())
+    writeData(idInfo, cleanData, tester)
     counter += 1
 
     # DEBUG: print remaining data

@@ -1,16 +1,16 @@
 """
 # Util functions
 """
+import lxml
+from mailmerge import MailMerge
 # import PARAMETERS
-from constants import PARAMETERS
+from constants import PARAMETERS, COA_TEMPLATE_NAME, LABSHEET_TEMPLATE_NAME
 
 """openFile()"""
-def openTextFile():
+def openTextFile(filename):
   # open file
-  # TODO: figure out and discuss how to read local file in location?
-  # TODO: Change txt filename
-  # rawFile = open("demotextOld.txt", "r")
-  rawFile = open("all results.txt", "r")
+  rawFile = open(filename, "r")
+  # DEBUG: rawFile = open("demotextOld.txt", "r")
 
   # turn into list of string and have a copy of original
   f = rawFile.readlines()
@@ -83,18 +83,16 @@ def getTest(f, isFirst:bool):
 Test parameters for two tests and prints & edits item if it's wrong
 Returns modified data set
 """
-def testParameters(data, startInd:int, allowedRanges):
+def testParameters(data, startInd:int, allowedRanges, sn):
   # for two tests
   for i in range(startInd, startInd + 2):
     # for each parameter in each test (10 of them)
     for j in range(10):
       current = data[i][j]
-      # if parameter is not in accepted ranges
+      # if parameter is not in accepted ranges, then warns usr
       if current not in allowedRanges[j]:
-        # print string w info of BAD parameter
-        print("Machine error in test %s, on element %s, value is %s, should be within %s" % (i, PARAMETERS[j], current, allowedRanges[j]))
-        # adds 'BAD' to parameter to be human spotted in resulting excel table - DON'T KNOW IF WORKS BUT NOT CODE-BREAKING
-        current = 'BAD ' + current
+        from gui import warn
+        warn("Machine %s error in test %s, on element %s, value is %s, should be within %s" % (sn, i, PARAMETERS[j], current, allowedRanges[j]))
 
   return data
 
@@ -122,3 +120,36 @@ def combineTestInfo(test1, test2):
 
   # return combined list
   return tempList
+
+def mailmergeToTemplate(templateName, idInfo, cleanData, tester):
+  # open the file using MailMerge
+  document = MailMerge('templates/' + templateName)
+
+  # DEBUG: print(document.get_merge_fields())
+
+  # merge id info & tester
+  document.merge(
+    **{'serial_number':idInfo[0],
+    'date':idInfo[1],
+    'tester':tester}
+    )
+
+  # for each of the 3 controls 
+  kovaNumber = 'I'
+  for i in range(3):
+    # for each parameter in each control
+    for j in range(10):
+      # concatinate merge field/name; starting with 'KOVA-I_LEU' (KOVA-[controlNumber]_[parameterName])
+      mergeField = 'KOVA-' + kovaNumber + '_' + PARAMETERS[j]
+      # merge added field to corresponding data of index
+      document.merge(**{mergeField:cleanData[i][j]})
+    kovaNumber = kovaNumber + 'I'
+
+  # write new file - serialNum + .docx
+  if (templateName == COA_TEMPLATE_NAME):
+    fname = 'documents/' + str(idInfo[0]) + '.docx'
+  elif (templateName == LABSHEET_TEMPLATE_NAME):
+    fname = 'documents/' + str(idInfo[0]) + ' QC Lab Worksheet' + '.docx'
+  else:
+    raise Exception("template name incorrect")
+  document.write(fname)
