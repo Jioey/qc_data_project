@@ -1,5 +1,4 @@
 """##Constants"""
-# TODO: Maybe change to enums?
 # name of all parameters tested, in correct order
 PARAMETERS = ['LEU', 'NIT', 'URO', 'PRO', 'pH', 'BLO', 'SG', 'KET', 'BIL', 'GLU']
 
@@ -20,3 +19,5 @@ COL_NAME = PARAMETERS
 # document template names
 COA_TEMPLATE_NAME = 'COA Template.docx'
 LABSHEET_TEMPLATE_NAME = 'Lab Worksheet Template.docx'
+COA_FAILED_TEMPLATE_NAME = 'COA Template - Failed.docx'
+LABSHEET_FAILED_TEMPLATE_NAME = 'Lab Worksheet Template - Failed.docx'

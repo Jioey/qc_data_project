@@ -8,9 +8,11 @@ Send to txtWriter
 # enttry where usr enters tester name
 # submit button to generate the files
 
-from tkinter import Button, Frame, Label, Tk, Entry, Text, messagebox, END
+from tkinter import Button, Frame, Label, Tk, Entry, Text, messagebox, END, NORMAL, DISABLED
 from tkinter import filedialog
-from functions import generateDocuments
+from dataParser import generateDocuments
+import traceback
+import sys
 
 class Example(Frame):
    # using instance variable to store filename
@@ -37,8 +39,10 @@ class Example(Frame):
       testerEntry = Entry(testerFrame)
       # submit button that triggers generateDocuments and clears text widgets
       submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), testerEntry.delete(0, END), self.txt.delete(1.0, END)])
-      # Text widget that displays loaded file
+      # Text widget that displays loaded file & read only
       self.txt = Text(self)
+      self.txt.config(state=DISABLED)
+
 
       # packing
       self.txt.pack(ipadx=3, ipady=3, fill='both', expand=True)
@@ -67,9 +71,12 @@ class Example(Frame):
          with open(fl, "r") as f:
             # reads it and store it
             text = f.read()
-         # displays read text on Text widget
+         # displays read text on Text widget (make txtbox temporaily changable)
+         self.txt.config(state=NORMAL)
          self.txt.delete(1.0, END)
          self.txt.insert(END, text)
+         self.txt.config(state=DISABLED)
+
 
    # triggers when submit button is hit
    # runs generateDocuments with the needed info entered from the gui
@@ -89,8 +96,11 @@ class Example(Frame):
             generateDocuments(self.filename, tester)
             messagebox.showinfo("TECO",  "Documents generated successfully")
          except Exception as e:
-            # TODO: show/hide terminal when run?
-            errorMsg = "Code error: %s; close window and see full error (traceback) in terminal" % e
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            tb = traceback.TracebackException(exc_type, exc_value, exc_tb)
+            errorMsg = ''.join(tb.format_exception_only())
+            traceback.print_exc()
+            # errorMsg = "Code error: %s; close window and see full error (traceback) in terminal" % e
             messagebox.showerror("Error", errorMsg)
 
 
