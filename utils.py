@@ -117,7 +117,7 @@ def testParameters(data:list[list[str]], startInd:int, allowedRanges:list[str], 
       # if parameter is not in accepted ranges, then warns usr
       if current not in allowedRanges[j]:
         from gui import warn
-        warn("Machine %s error in test %s, on element %s, value is %s, should be within %s" % (sn, i, constants.PARAMETERS[j], current, allowedRanges[j]))
+        warn("Machine %s error in test %s of KOVA %s, on element %s, value is %s, should be within %s" % (sn, i%2, round(i/2)+1, constants.PARAMETERS[j], current, allowedRanges[j]))
 
 
 def translateData(rawData:list[list[str]]) -> list[list[str]]:
