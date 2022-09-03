@@ -36,6 +36,11 @@ Returns:
   data 
 """
 def getTest(f:list[str]) -> list[str]:
+  # pop out info lines (top)
+  f.pop(0)
+  f.pop(0)
+  f.pop(0)
+
   # get the data
   data = []
   for i in range(10):

@@ -51,6 +51,7 @@ def generateDocuments(filename:str, tester:str) -> None:
 Must be run before getTests
 '''
 def getIdInfo(f:list[str]) -> list[str]:
+  f = f.copy()
   # line 0 - serial number
   currentLine = f.pop(0)
   serialNum = currentLine[40:53]
