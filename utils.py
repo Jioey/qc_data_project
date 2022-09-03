@@ -112,7 +112,6 @@ def testParameters(data:list[list[str]], startInd:int, allowedRanges:list[str], 
   for i in range(startInd, startInd + 2):
     # for each parameter in each test (10 of them)
     for j in range(10):
-      print (str(i) + str(j))
       current = data[i][j]
       # if parameter is not in accepted ranges, then warns usr
       if current not in allowedRanges[j]:
@@ -145,7 +144,7 @@ def translateData(rawData:list[list[str]]) -> list[list[str]]:
     #   print(i)
     # print('\n\n')
 
-    return data
+  return data
 
 """
 ##combineTestInfo(test1, test2)
