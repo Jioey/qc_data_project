@@ -112,6 +112,7 @@ def testParameters(data:list[list[str]], startInd:int, allowedRanges:list[str], 
   for i in range(startInd, startInd + 2):
     # for each parameter in each test (10 of them)
     for j in range(10):
+      print (str(i) + str(j))
       current = data[i][j]
       # if parameter is not in accepted ranges, then warns usr
       if current not in allowedRanges[j]:
@@ -199,9 +200,9 @@ def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list
   elif (templateName == constants.LABSHEET_TEMPLATE_NAME):
     fname = 'documents/' + str(idInfo[0]) + ' QC Lab Worksheet' + '.docx'
   elif (templateName == constants.COA_FAILED_TEMPLATE_NAME):
-    fname = 'documents/!' + str(idInfo[0]) + ' - Failed QC' + '.docx'
+    fname = 'failedDocuments/!' + str(idInfo[0]) + ' - Failed QC' + '.docx'
   elif (templateName == constants.LABSHEET_FAILED_TEMPLATE_NAME):
-    fname = 'documents/!' + str(idInfo[0]) + ' QC Lab Worksheet - Failed QC' + '.docx'
+    fname = 'failedDocuments/!' + str(idInfo[0]) + ' QC Lab Worksheet - Failed QC' + '.docx'
   else:
     raise Exception("template name incorrect")
 
