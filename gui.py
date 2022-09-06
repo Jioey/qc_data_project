@@ -93,8 +93,8 @@ class App(Tk):
    '''
    def onSubmit(self, tester:str) -> None:
       # DEBUG: usr input info printed in terminal
-      print("OnSubmit: ")
-      print("filename: %s; tester: %s" % (self.filename, tester))
+      # print("OnSubmit: ")
+      # print("filename: %s; tester: %s" % (self.filename, tester))
 
       if (self.filename == ''):
          # if filename is empty
@@ -104,6 +104,9 @@ class App(Tk):
          # if tester is empty
          messagebox.showerror("Error", "No tester name has been entered")
          raise Exception("tester empty")
+      elif (len(tester.split(" ")) != 2):
+         messagebox.showwarning("Warning", "Tester name has been entered incorrectly\nPlease use the 'FirstName LastInitial.' format")
+         raise Exception("tester name incorrect")
       else:
          # if both fields are entered
          try:
