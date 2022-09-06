@@ -81,17 +81,23 @@ class dataParser():
     f = f.copy()
     # line 0 - serial number
     currentLine = f.pop(0)
-    serialNum = currentLine[40:53]
+    # split current line by seperator
+    currentLine = list(currentLine.split("|"))
+    serialNum = currentLine[3][10:23]
 
     # line 1 - no info
     f.pop(0)
 
     # line 2 - date and time
-    currentLine = f.pop(0)                                # for new update in TC-201
-    date = currentLine[15:25]                             # date = currentLine[22:30]
-    # get yyyy/mm/dd format and add '-' in between          date = date[0:4] + "-" + date[4:6] + "-" + date[6:8]
-    date = date[6:10] + '-' + date[0:2] + '-' + date[3:5] # time = currentLine[30:34]
-    time = currentLine[26:31]                             # time = time[0:2] + ":" + time[2:4]
+    currentLine = f.pop(0) 
+    # split current line by seperator
+    currentLine = list(filter(None, currentLine.split("|")))
+    # get the item; it has date AND time
+    date = currentLine[4]
+    # get and format the date
+    date = date[0:4] + "-" + date[4:6] + "-" + date[6:8]
+    # get and format the time
+    time = date[8:10] + ":" + date[10:12]
 
     # collect ID info
     return [serialNum, date, time]
