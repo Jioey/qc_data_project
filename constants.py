@@ -1,4 +1,7 @@
-"""##Constants"""
+'''
+Constants
+Including allowed ranges for tests, document template names, etc.
+'''
 # name of all parameters tested, in correct order
 PARAMETERS = ['LEU', 'NIT', 'URO', 'PRO', 'pH', 'BLO', 'SG', 'KET', 'BIL', 'GLU']
 

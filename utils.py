@@ -1,12 +1,17 @@
-"""
-# Util functions
-"""
 import lxml
 from mailmerge import MailMerge
 # import constants
 import constants
 
-"""openFile()"""
+'''
+Opens text file and returns a copy of it as a list of string
+
+Args:
+    filename (str): The name of the file to be opened
+
+Returns:
+    f (list[str]): The text file's content in list format
+'''
 def openTextFile(filename:str) -> list[str]:
   # open file
   rawFile = open(filename, "r")
@@ -24,17 +29,16 @@ def openTextFile(filename:str) -> list[str]:
   # returns a copy of the list of string
   return f.copy()
 
-"""
-The getTest function gets unprocessed data from file
-and processes one test
-Returns data of 1 test, in correct order for COA
+
+'''
+Gets data of one test from f and turns it into a list
 
 Args:
-  f (list): The arg is used as reference to the full file
+    f (list[str]): The arg is used as reference to the full file
 
 Returns:
-  data 
-"""
+    data (list[str]): The list of results of one test
+'''
 def getTest(f:list[str]) -> list[str]:
   # pop out info lines (top)
   f.pop(0)
@@ -59,15 +63,16 @@ def getTest(f:list[str]) -> list[str]:
   
   return data
 
+
 '''
-The parseResultStr function takes a unparsed string of a data point
+Takes a unparsed string of a data point 
 and extracts the substring of the data point
 
 Args:
-  s (str): The arg is the unparsed string
+    s (str): The unparsed string
 
 Returns:
-  s (str): The parsed string
+    s (str): The parsed string
 '''
 def parseResultStr(s:str) -> str:
   # split into list of words
@@ -81,15 +86,16 @@ def parseResultStr(s:str) -> str:
 
   return s
 
+
 '''
-The checkWarningLine function checks if there is a CSR warning line at the end of a test
+Checks if there is a CSR warning line at the end of a test
 and removes it if there is 
 
 Args:
-  f (list): The arg is used as reference to the full file
+    f (list[str]): Used as reference to the full file
 
 Returns:
-  True if a CSR line is removed and False if not
+    True if a CSR line is removed and False if not
 '''
 def checkWarningLine(f:list[str]) -> bool:
   # empty string considered False
@@ -101,7 +107,16 @@ def checkWarningLine(f:list[str]) -> bool:
     return True
   return False
 
+'''
+'Translates' data - replaces words with symbols based on constants.dictSymbol
+e.g. 'Positive' to '(+)'
 
+Args:
+    rawData (list[list[str]): The list of data, from results of one machine, to be translated
+
+Returns:
+    data (list[list[str]): The translated list of results
+'''
 def translateData(rawData:list[list[str]]) -> list[list[str]]:
   data = []
   # TRANSLATION (size, +/-, and trace)
@@ -135,6 +150,16 @@ def translateData(rawData:list[list[str]]) -> list[list[str]]:
 Combine two tests into one list
 Returns combined, clean list
 """
+'''
+Combines two lists of single test results into one list
+
+Args:
+    test1 (list[str]): First list to be combined
+    test2 (list[str]): Second list to be combined
+
+Returns:
+    list[list[str]]: Combined (and clean-looking) list
+'''
 def combineTestInfo(test1:list[str], test2:list[str]) -> list[str]:
   # reset tempList
   tempList = []
@@ -154,6 +179,23 @@ def combineTestInfo(test1:list[str], test2:list[str]) -> list[str]:
   # return combined list
   return tempList
 
+
+'''
+Using mailMerge to create a COA or Lab Sheet using 
+a Word template and the data extracted by the program
+
+Args:
+    templateName (str): The name of the Word template to use
+    idInfo (list[str]): List of serial number, date, and time
+    cleanData (list[list[str]): The processed list of data of one machine
+    tester (str): Name of tester to be written on the document
+
+Raises:
+    Exception: Template name incorrect
+
+Returns:
+    None
+'''
 def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list[str]], tester:str) -> None:
   # open the template using MailMerge
   document = MailMerge('templates/' + templateName)
@@ -187,7 +229,7 @@ def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list
   elif (templateName == constants.LABSHEET_FAILED_TEMPLATE_NAME):
     fname = 'failed documents/!' + str(idInfo[0]) + ' QC Lab Worksheet - Failed QC' + '.docx'
   else:
-    raise Exception("template name incorrect")
+    raise Exception("Template name incorrect")
 
   # write new file
   document.write(fname)

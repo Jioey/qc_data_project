@@ -1,19 +1,19 @@
-"""
-Take input from user
-Error handling
-Send to txtWriter
-"""
-# pseudo code
-# open file button -> displays file name when loaded
-# enttry where usr enters tester name
-# submit button to generate the files
-
 from tkinter import Button, Frame, Label, Tk, Entry, Text, messagebox, END, NORMAL, DISABLED
 from tkinter import filedialog
 import traceback
 
 from dataParser import dataParser
 
+'''
+A simple Tkinter UI that loads a txt file and allows user to enter tester's name
+
+Args:
+      parser (dataParser): A dataParser object to use for processing the data
+
+Attributes:
+      filename (str): Instance variable that stores the input txt file's name
+      parser (dataParser): Reference to the parser object
+'''
 class App(Tk):
    # init
    def __init__(self, parser:dataParser) -> None:
@@ -27,7 +27,9 @@ class App(Tk):
       # inituialize UI
       self.initUI()
 
-   # initializing the gui
+   '''
+   Initializes the UI with all its components
+   '''
    def initUI(self) -> None:
       # packing self (the Frame)
       self.title("TECO")
@@ -55,8 +57,10 @@ class App(Tk):
       submitButton.pack(fill='both')
 
 
-   # triggers when load button is hit
-   # saves filename, reads the file and displays on Text widget
+   '''  
+   Saves filename, reads the file and displays on Text widget
+   Triggers when load button is hit
+   '''
    def onOpen(self) -> None:
       # file types choosable in File Explorer
       ftypes = [('text files', '*.txt'), ('All files', '*')]
@@ -80,9 +84,13 @@ class App(Tk):
          self.txt.config(state=DISABLED)
 
 
-   # triggers when submit button is hit
-   # runs generateDocuments with the needed info entered from the gui
-   # raises Exception if either filename or tester entry is empty
+   '''
+   Runs generateDocuments with the needed info entered from the gui
+   Triggers when submit button is hit
+
+   Raises:
+         Exception: Either filename or tester entry is empty
+   '''
    def onSubmit(self, tester:str) -> None:
       # DEBUG: usr input info printed in terminal
       print("OnSubmit: ")
@@ -115,6 +123,8 @@ class App(Tk):
             messagebox.showerror("Error", errorMsg)
 
 
-# shows warning text window
+'''
+shows warning text window
+'''
 def warn(msg):
    messagebox.showwarning('Warning - Bad Machine', msg)

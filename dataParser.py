@@ -1,19 +1,33 @@
 import utils
 import constants
 
-'''
-The dataParser file contains all the functionality needed to 
-read, parse, process, and wirte the QC results form one machine
-'''
+
 class dataParser():
+  '''
+  The dataParser file contains all the functionality needed to 
+  read, parse, process, and wirte the QC results
+
+  Attributes:
+    sn (str): storing the serial number of the current machine
+    hasFailed (bool): stores if the current machine has failed QC
+  '''
   def __init__(self) -> None:
     # instance var to store serial number in case of error
     self.sn = ''
+    self.hasFailed = False
 
 
-  """
-  Main, driving function in this file. Combines all functions and parses all data in the given file
-  """
+  '''
+  Main, driving function of this object
+  Combines all functions and parses all data in the given file
+
+  Args:
+      filename (str): Used to open the txt file storing results
+      tester (str): Used to write tester name on the documents
+
+  Returns:
+      None
+  '''
   def generateDocuments(self, filename:str, tester:str) -> None: 
     # gets list of string from openning the inner text file
     f = utils.openTextFile(filename)
@@ -23,7 +37,6 @@ class dataParser():
     # keep running until file runs out
     while f[0] != ['']:
       print("\nMachine %s --------------------------------------------------------------------" % counter)
-
       # get data
       idInfo = self.getIdInfo(f)
       rawData = self.getTests(f)
@@ -37,7 +50,6 @@ class dataParser():
       self.hasFailed = False
       # set serial number for each machine
       self.sn = idInfo[0]
-
 
       # process data
       cleanData = self.processData(rawData) 
@@ -54,8 +66,16 @@ class dataParser():
       # print(f)
       # print()
 
+
   '''
-  Must be run before getTests
+  Gets serial number, date, and time from the txt file
+  Must be run before getTests!!
+
+  Args:
+      f (list[str]): txt file in the format of a list of str
+
+  Returns:
+      list[str]: A list storing, in order, the serial number, date, and time
   '''
   def getIdInfo(self, f:list[str]) -> list[str]:
     f = f.copy()
@@ -77,9 +97,16 @@ class dataParser():
     return [serialNum, date, time]
 
 
-  """##getData(f)"""
-  # gets data from f, disruptive
-  # returns dataset of 6 tests, and id info
+  '''
+  Gets the test data of one machine from f and turns it into a 2D list
+  WARNING: deletes each line as the code traverses through f
+
+  Args:
+      f (list[str]): txt file in the format of a list of str
+  
+  Returns:
+      list[list[str]]: A 2D list of string containing results of all tests performed on one machine
+  '''
   def getTests(self, f:list[str]) -> list[list[str]]:
     # returning 2d array
     allData = []
@@ -93,12 +120,21 @@ class dataParser():
     return allData
 
 
-  """##processData(rawData)"""
+  '''
+  Processes the 2D list outputted by getTests to the format to be written on the documents.
+  Including 'translate' to symbols (when necessary, e.g. (+)), error check, and combines two lists (tests) of one KOVA to one list
+
+  Args:
+      rawData (list[str]): 2D list of test results, taken straight from the txt
+  
+  Returns:
+      list[list[str]]: A 2D list of string of results of tests from one machine, after processing it to the format written on the documents
+  '''
   def processData(self, rawData:list[list[str]]) -> list[list[str]]:
     # list for organized data
     translatedData = utils.translateData(rawData)
 
-    # CATCH MACHINE ERRORS
+    # ERROR CHECK MACHINES
     # run testParameters for each control
     self.testParameters(translatedData, 0, constants.allowedRangesI, self.sn) # KOVA I
     self.testParameters(translatedData, 2, constants.allowedRangesII, self.sn) # KOVA II
@@ -109,11 +145,16 @@ class dataParser():
             utils.combineTestInfo(translatedData[2], translatedData[3]),
             utils.combineTestInfo(translatedData[4], translatedData[5])]
 
-  """
-  ##testParameters(data, startInd:int, allowedRanges)
+
+  '''
   Test parameters for two tests and prints & edits item if it's wrong
-  Returns modified data set
-  """
+
+  Args:
+      f (list[str]): txt file in the format of a list of str
+  
+  Returns:
+      list[list[str]]: A 2D list of string containing results of all tests performed on one machine
+  '''
   def testParameters(self, data:list[list[str]], startInd:int, allowedRanges:list[str], sn:str) -> None:
     # for two tests
     for i in range(startInd, startInd + 2):
@@ -125,8 +166,19 @@ class dataParser():
           from gui import warn
           self.hasFailed = True
           warn("Machine %s error in test %s of KOVA %s, on element %s, value is %s, should be within %s" % (sn, i%2, round(i/2)+1, constants.PARAMETERS[j], current, allowedRanges[j]))
+   
         
-  """##writeData(idInfo, cleanData)"""
+  '''
+  Writes data to new word doc (COA and Lab Worksheet) using templates
+
+  Args:
+      idInfo (list[str]): serial num, date, and time in a list (as outputted by getIdInfo())
+      cleanData (list[str]): txt file in the format of a list of str
+      tester (str): tester name to be written on to the documents
+  
+  Returns:
+      None
+  '''
   # writes data to new word doc using template
   def writeData(self, idInfo:list[str], cleanData:list[list[str]], tester:str) -> None:
     testerInitial = ''.join(s[0].upper() for s in tester.split(' '))

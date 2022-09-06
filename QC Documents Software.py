@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-
-"""##Packages"""
+'''
+Pydoc in 'Google Style'
+Refrence: https://www.datacamp.com/tutorial/docstrings-python
+'''
 import gui
 import dataParser
 
