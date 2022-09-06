@@ -1,0 +1,5 @@
+__pycache__/
+dist/
+documents/
+failed documents/
+*.txt
