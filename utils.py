@@ -102,23 +102,6 @@ def checkWarningLine(f:list[str]) -> bool:
   return False
 
 
-"""
-##testParameters(data, startInd:int, allowedRanges)
-Test parameters for two tests and prints & edits item if it's wrong
-Returns modified data set
-"""
-def testParameters(data:list[list[str]], startInd:int, allowedRanges:list[str], sn:str) -> None:
-  # for two tests
-  for i in range(startInd, startInd + 2):
-    # for each parameter in each test (10 of them)
-    for j in range(10):
-      current = data[i][j]
-      # if parameter is not in accepted ranges, then warns usr
-      if current not in allowedRanges[j]:
-        from gui import warn
-        warn("Machine %s error in test %s of KOVA %s, on element %s, value is %s, should be within %s" % (sn, i%2, round(i/2)+1, constants.PARAMETERS[j], current, allowedRanges[j]))
-
-
 def translateData(rawData:list[list[str]]) -> list[list[str]]:
   data = []
   # TRANSLATION (size, +/-, and trace)
@@ -145,6 +128,7 @@ def translateData(rawData:list[list[str]]) -> list[list[str]]:
     # print('\n\n')
 
   return data
+
 
 """
 ##combineTestInfo(test1, test2)
