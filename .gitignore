@@ -1,5 +1,7 @@
 __pycache__/
 dist/
+build/
 documents/
 failed documents/
 *.txt
+*.spec
