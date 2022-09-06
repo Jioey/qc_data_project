@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """##Packages"""
-from gui import main
+import dataParser
 
 if __name__ == '__main__':
     main()

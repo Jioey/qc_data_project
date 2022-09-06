@@ -5,15 +5,20 @@ import constants
 The dataParser file contains all the functionality needed to 
 read, parse, process, and wirte the QC results form one machine
 '''
-
+class dataParser():
+  def __init__(self) -> None:
 # instance var to store serial number in case of error
-sn = ''
-isErrorMachine = False
+    self.sn = ''
+    # has machine failed QC
+    self.hasFailed = False
+    # list of error msgs displayed to usr
+    self.errMsg = ''
+
 
 """
 Main, driving function in this file. Combines all functions and parses all data in the given file
 """
-def generateDocuments(filename:str, tester:str) -> None: 
+  def generateDocuments(self, filename:str, tester:str) -> None: 
   # gets list of string from openning the inner text file
   f = utils.openTextFile(filename)
 
@@ -24,8 +29,8 @@ def generateDocuments(filename:str, tester:str) -> None:
     print("\nMachine %s --------------------------------------------------------------------" % counter)
 
     # get data
-    idInfo = getIdInfo(f)
-    rawData = getTests(f)
+      idInfo = self.getIdInfo(f)
+      rawData = self.getTests(f)
     print("Serial Number: " + idInfo[0])
     # print("raw data:")
     # for i in rawData:
@@ -33,13 +38,13 @@ def generateDocuments(filename:str, tester:str) -> None:
     # print()
 
     # process data
-    cleanData = processData(rawData) 
+      cleanData = self.processData(rawData) 
     print("clean data:")
     for i in cleanData:
       print(i)
 
     # write data
-    writeData(idInfo, cleanData, tester)
+      self.writeData(idInfo, cleanData, tester)
     counter += 1
 
     # DEBUG: print remaining data
@@ -50,13 +55,13 @@ def generateDocuments(filename:str, tester:str) -> None:
 '''
 Must be run before getTests
 '''
-def getIdInfo(f:list[str]) -> list[str]:
+  def getIdInfo(self, f:list[str]) -> list[str]:
   f = f.copy()
   # line 0 - serial number
   currentLine = f.pop(0)
   serialNum = currentLine[40:53]
-  global sn
-  sn = serialNum
+    # set serial number to current one in class
+    self.sn = serialNum
 
   # line 1 - no info
   f.pop(0)
@@ -75,7 +80,7 @@ def getIdInfo(f:list[str]) -> list[str]:
 """##getData(f)"""
 # gets data from f, disruptive
 # returns dataset of 6 tests, and id info
-def getTests(f:list[str]) -> list[list[str]]:
+  def getTests(self, f:list[str]) -> list[list[str]]:
   # returning 2d array
   allData = []
 
@@ -89,15 +94,15 @@ def getTests(f:list[str]) -> list[list[str]]:
 
 
 """##processData(rawData)"""
-def processData(rawData:list[list[str]]):
+  def processData(self, rawData:list[list[str]]) -> list[list[str]]:
   # list for organized data
   translatedData = utils.translateData(rawData)
 
   # CATCH MACHINE ERRORS
   # run testParameters for each control
-  utils.testParameters(translatedData, 0, constants.allowedRangesI, sn) # KOVA I
-  utils.testParameters(translatedData, 2, constants.allowedRangesII, sn) # KOVA II
-  utils.testParameters(translatedData, 4, constants.allowedRangesIII, sn) # KOVA III
+    self.testParameters(translatedData, 0, constants.allowedRangesI, self.sn) # KOVA I
+    self.testParameters(translatedData, 2, constants.allowedRangesII, self.sn) # KOVA II
+    self.testParameters(translatedData, 4, constants.allowedRangesIII, self.sn) # KOVA III
 
   # combine the two tests and return it
   return [utils.combineTestInfo(translatedData[0], translatedData[1]), 
@@ -107,10 +112,10 @@ def processData(rawData:list[list[str]]):
 
 """##writeData(idInfo, cleanData)"""
 # writes data to new word doc using template
-def writeData(idInfo:list[str], cleanData:list[list[str]], tester:str, hasFailed:bool) -> None:
+  def writeData(self, idInfo:list[str], cleanData:list[list[str]], tester:str) -> None:
   testerInitial = ''.join(s[0].upper() for s in tester.split(' '))
 
-  if not hasFailed:
+    if not self.hasFailed:
     # mail merge on COA and Lab Worksheet
     utils.mailmergeToTemplates(constants.COA_TEMPLATE_NAME, idInfo, cleanData, testerInitial)
     # mail merge on Lab Worksheet w tester's full name

@@ -14,9 +14,7 @@ from dataParser import generateDocuments
 import traceback
 import sys
 
-class Example(Frame):
-   # using instance variable to store filename
-   filename = ''
+from dataParser import dataParser
 
    # init
    def __init__(self):
@@ -93,7 +91,8 @@ class Example(Frame):
          raise Exception("tester empty")
       else:
          try:
-            generateDocuments(self.filename, tester)
+            self.parser.generateDocuments(self.filename, tester)
+            # if (self.parser.isErrorMachine):
             messagebox.showinfo("TECO",  "Documents generated successfully")
          except Exception as e:
             exc_type, exc_value, exc_tb = sys.exc_info()
