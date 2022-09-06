@@ -121,5 +121,6 @@ Must be run before getTests
     # mail merge on Lab Worksheet w tester's full name
     utils.mailmergeToTemplates(constants.LABSHEET_TEMPLATE_NAME, idInfo, cleanData, tester)
   else: 
+      # if has failed QC, then output using failed templates
     utils.mailmergeToTemplates(constants.COA_FAILED_TEMPLATE_NAME, idInfo, cleanData, testerInitial)
     utils.mailmergeToTemplates(constants.LABSHEET_FAILED_TEMPLATE_NAME, idInfo, cleanData, tester) 

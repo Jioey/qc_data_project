@@ -85,21 +85,31 @@ class App(Tk):
    # runs generateDocuments with the needed info entered from the gui
    # raises Exception if either filename or tester entry is empty
    def onSubmit(self, tester:str) -> None:
+      # DEBUG: usr input info printed in terminal
       print("OnSubmit: ")
       print("filename: %s; tester: %s" % (self.filename, tester))
 
       if (self.filename == ''):
+         # if filename is empty
          messagebox.showerror("Error", "No file has been loaded")
          raise Exception("filename empty")
       elif (tester == ''):
+         # if tester is empty
          messagebox.showerror("Error", "No tester name has been entered")
          raise Exception("tester empty")
       else:
+         # if both fields are entered
          try:
+            # try generating data
             self.parser.generateDocuments(self.filename, tester)
             # if (self.parser.isErrorMachine):
+            #    # shows warning text window
+            #    for msg in self.parser.errMsgList:
+            #       messagebox.showwarning('Warning - Bad Machine', msg)
+            # Generated documents comfirmation
             messagebox.showinfo("TECO",  "Documents generated successfully")
          except Exception as e:
+            # prints error message
             exc_type, exc_value, exc_tb = sys.exc_info()
             tb = traceback.TracebackException(exc_type, exc_value, exc_tb)
             errorMsg = ''.join(tb.format_exception_only())
