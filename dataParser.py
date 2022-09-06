@@ -9,10 +9,6 @@ class dataParser():
   def __init__(self) -> None:
 # instance var to store serial number in case of error
     self.sn = ''
-    # has machine failed QC
-    self.hasFailed = False
-    # list of error msgs displayed to usr
-    self.errMsg = ''
 
 
 """
@@ -37,6 +33,12 @@ Main, driving function in this file. Combines all functions and parses all data 
     #   print(i)
     # print()
 
+      # initialize hasFailed
+      self.hasFailed = False
+      # set serial number for each machine
+      self.sn = idInfo[0]
+
+
     # process data
       cleanData = self.processData(rawData) 
     print("clean data:")
@@ -60,8 +62,6 @@ Must be run before getTests
   # line 0 - serial number
   currentLine = f.pop(0)
   serialNum = currentLine[40:53]
-    # set serial number to current one in class
-    self.sn = serialNum
 
   # line 1 - no info
   f.pop(0)
