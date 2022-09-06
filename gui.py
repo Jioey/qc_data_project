@@ -10,22 +10,28 @@ Send to txtWriter
 
 from tkinter import Button, Frame, Label, Tk, Entry, Text, messagebox, END, NORMAL, DISABLED
 from tkinter import filedialog
-from dataParser import generateDocuments
 import traceback
 import sys
 
 from dataParser import dataParser
 
+class App(Tk):
    # init
-   def __init__(self):
+   def __init__(self, parser:dataParser) -> None:
       super().__init__()
+      # using instance variable to store filename
+      self.filename = ''
+      # reference to the parser obj
+      self.parser = parser
+      # setting window geometry
+      self.geometry("680x470+400+150")
+      # inituialize UI
       self.initUI()
 
    # initializing the gui
-   def initUI(self):
+   def initUI(self) -> None:
       # packing self (the Frame)
-      self.master.title("TECO")
-      self.pack()
+      self.title("TECO")
       # another frame for tester input
       testerFrame = Frame(self)
 
@@ -41,7 +47,6 @@ from dataParser import dataParser
       self.txt = Text(self)
       self.txt.config(state=DISABLED)
 
-
       # packing
       self.txt.pack(ipadx=3, ipady=3, fill='both', expand=True)
       testerFrame.pack(fill='x')
@@ -53,7 +58,7 @@ from dataParser import dataParser
 
    # triggers when load button is hit
    # saves filename, reads the file and displays on Text widget
-   def onOpen(self):
+   def onOpen(self) -> None:
       # file types choosable in File Explorer
       ftypes = [('text files', '*.txt'), ('All files', '*')]
       # file dialog
@@ -79,7 +84,7 @@ from dataParser import dataParser
    # triggers when submit button is hit
    # runs generateDocuments with the needed info entered from the gui
    # raises Exception if either filename or tester entry is empty
-   def onSubmit(self, tester):
+   def onSubmit(self, tester:str) -> None:
       print("OnSubmit: ")
       print("filename: %s; tester: %s" % (self.filename, tester))
 
