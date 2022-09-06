@@ -177,7 +177,8 @@ class dataParser():
         if current not in allowedRanges[j]:
           from gui import warn
           self.hasFailed = True
-          warn("Machine %s error in test %s of KOVA %s, on element %s, value is %s, should be within %s" % (sn, i%2, round(i/2)+1, constants.PARAMETERS[j], current, allowedRanges[j]))
+          indexMapping = {0:'0', 1:'3', 2:'1', 3:'4', 4:'2', 5:'5'}
+          warn("Machine %s error in test %s, KOVA %s, on element %s, value is %s, should be within %s" % (sn, indexMapping.get(i), int((startInd/2)+1), constants.PARAMETERS[j], current, allowedRanges[j]))
    
         
   '''
