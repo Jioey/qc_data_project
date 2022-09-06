@@ -199,9 +199,9 @@ def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list
   elif (templateName == constants.LABSHEET_TEMPLATE_NAME):
     fname = 'documents/' + str(idInfo[0]) + ' QC Lab Worksheet' + '.docx'
   elif (templateName == constants.COA_FAILED_TEMPLATE_NAME):
-    fname = 'failedDocuments/!' + str(idInfo[0]) + ' - Failed QC' + '.docx'
+    fname = 'failed documents/!' + str(idInfo[0]) + ' - Failed QC' + '.docx'
   elif (templateName == constants.LABSHEET_FAILED_TEMPLATE_NAME):
-    fname = 'failedDocuments/!' + str(idInfo[0]) + ' QC Lab Worksheet - Failed QC' + '.docx'
+    fname = 'failed documents/!' + str(idInfo[0]) + ' QC Lab Worksheet - Failed QC' + '.docx'
   else:
     raise Exception("template name incorrect")
 
