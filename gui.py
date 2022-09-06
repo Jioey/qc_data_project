@@ -11,7 +11,6 @@ Send to txtWriter
 from tkinter import Button, Frame, Label, Tk, Entry, Text, messagebox, END, NORMAL, DISABLED
 from tkinter import filedialog
 import traceback
-import sys
 
 from dataParser import dataParser
 
@@ -109,25 +108,12 @@ class App(Tk):
             # Generated documents comfirmation
             messagebox.showinfo("TECO",  "Documents generated successfully")
          except Exception as e:
-            # prints error message
-            exc_type, exc_value, exc_tb = sys.exc_info()
-            tb = traceback.TracebackException(exc_type, exc_value, exc_tb)
-            errorMsg = ''.join(tb.format_exception_only())
+            # print traceback msg
             traceback.print_exc()
-            # errorMsg = "Code error: %s; close window and see full error (traceback) in terminal" % e
+            # show error msg to usr
+            errorMsg = "Code error: %s; see full traceback in terminal" % e
             messagebox.showerror("Error", errorMsg)
 
-
-# main function that runs the gui
-def main():
-   # root of tkinter
-   root = Tk()
-   # creating Frame instance
-   ex = Example()
-   # setting window geometry
-   root.geometry("680x470+400+150")
-   # mainloop continuosly shows window until closed
-   root.mainloop()
 
 # shows warning text window
 def warn(msg):
