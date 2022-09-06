@@ -114,15 +114,21 @@ class dataParser():
     for i in range(6):
       # DEBUG: print("test %s" % (i+1))
       allData.append(utils.getTest(f))
-
     # print("\n")
+
+    # reorganize data list in KOVA I, II, III, I, II, III order
+    kovaOrder = [0, 3, 1, 4, 2, 5]
+    allData = [allData[i] for i in kovaOrder]
+    for i in allData:
+      print(i)    
 
     return allData
 
 
   '''
   Processes the 2D list outputted by getTests to the format to be written on the documents.
-  Including 'translate' to symbols (when necessary, e.g. (+)), error check, and combines two lists (tests) of one KOVA to one list
+  Including sorting the list in KOVA order, 'translate' to symbols (when necessary, e.g. (+)), error check, 
+  and combines two lists (tests) of one KOVA to one list
 
   Args:
       rawData (list[str]): 2D list of test results, taken straight from the txt

@@ -42,7 +42,7 @@ Returns:
 def getTest(f:list[str]) -> list[str]:
   # pop out info lines (top)
   f.pop(0)
-  f.pop(0)
+  f.pop(0) # Includes patient id, will be used for identifying KOVA test
   f.pop(0)
 
   # get the data
@@ -54,37 +54,17 @@ def getTest(f:list[str]) -> list[str]:
     currentLine = list(filter(None, currentLine.split("|")))
     # DEBUG: print(currentLine)
     # add the data to the data list
-    data.append(parseResultStr(currentLine[5]))
+    data.append(currentLine[4])
 
-  # DEBUG: print(''.join(data, '\n'))
+  # reverse order for order on document
+  data.reverse()
+
+  # DEBUG: print(data)
 
   # removes an extra line if there is 
   checkWarningLine(f)
   
   return data
-
-
-'''
-Takes a unparsed string of a data point 
-and extracts the substring of the data point
-
-Args:
-    s (str): The unparsed string
-
-Returns:
-    s (str): The parsed string
-'''
-def parseResultStr(s:str) -> str:
-  # split into list of words
-  s = s.split(' ')
-  # get rid of empty items in list
-  s = [i for i in s if i]
-  # remove '*' if it's in list
-  if '*' in s: s.remove('*')
-  # remove '*' if it's in the word (index 0 would be the data we're interested in)
-  s = s[0].replace('*', '')
-
-  return s
 
 
 '''
