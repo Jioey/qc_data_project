@@ -1,85 +1,0 @@
-MSH|^~\&|Clarity Diagnostics|CLA-PLTUA-CD220302482CW|LIS|PC|20220819122354||ORU^R01|1|P|2.3.1||||0||ASCII|||
-PID|1||||QUICKTEST||||||||||||||||||||||||||
-OBR|1|0000|||||08/19/2022 11:51 am||1||||||1|||||||||||||||||||||||||||||||||
-OBX|1|ST|1|LEU|      * Large|||||||||||||
-OBX|2|ST|2|NIT|   * Positive|||||||||||||
-OBX|3|ST|3|URO| *>=8.0 EU/dL|||||||||||||
-OBX|4|ST|4|PRO| *>=300 mg/dL|||||||||||||
-OBX|5|ST|5|pH |          12.5|||||||||||||
-OBX|6|ST|6|BLD|      * Large|||||||||||||
-OBX|7|ST|7|SG |        1.020|||||||||||||
-OBX|8|ST|8|KET|  *>=80 mg/dL|||||||||||||
-OBX|9|ST|9|BIL|      * Large|||||||||||||
-OBX|10|ST|10|GLU| * 1000 mg/dL|||||||||||||
-
-MSH|^~\&|Clarity Diagnostics|CLA-PLTUA-CD220302482CW|LIS|PC|20220819122400||ORU^R01|2|P|2.3.1||||0||ASCII|||
-PID|1||||QUICKTEST||||||||||||||||||||||||||
-OBR|1|0003|||||08/19/2022 12:02 pm||1||||||1|||||||||||||||||||||||||||||||||
-OBX|1|ST|1|LEU|      * Large|||||||||||||
-OBX|2|ST|2|NIT|   * Positive|||||||||||||
-OBX|3|ST|3|URO| *>=8.0 EU/dL|||||||||||||
-OBX|4|ST|4|PRO| *>=300 mg/dL|||||||||||||
-OBX|5|ST|5|pH |          7.5|||||||||||||
-OBX|6|ST|6|BLD|      * Large|||||||||||||
-OBX|7|ST|7|SG |        1.020|||||||||||||
-OBX|8|ST|8|KET|  *>=80 mg/dL|||||||||||||
-OBX|9|ST|9|BIL|      * Large|||||||||||||
-OBX|10|ST|10|GLU| * 1000 mg/dL|||||||||||||
-
-MSH|^~\&|Clarity Diagnostics|CLA-PLTUA-CD220302482CW|LIS|PC|20220819122406||ORU^R01|3|P|2.3.1||||0||ASCII|||
-PID|1||||QUICKTEST||||||||||||||||||||||||||
-OBR|1|0001|||||08/19/2022 11:54 am||1||||||1|||||||||||||||||||||||||||||||||
-OBX|1|ST|1|LEU|   * Moderate|||||||||||||
-OBX|2|ST|2|NIT|   * Positive|||||||||||||
-OBX|3|ST|3|URO|    0.2 EU/dL|||||||||||||
-OBX|4|ST|4|PRO|        Trace|||||||||||||
-OBX|5|ST|5|pH |          7.5|||||||||||||
-OBX|6|ST|6|BLD|   * Moderate|||||||||||||
-OBX|7|ST|7|SG |        1.015|||||||||||||
-OBX|8|ST|8|KET|        Trace|||||||||||||
-OBX|9|ST|9|BIL|     Negative|||||||||||||
-OBX|10|ST|10|GLU|    100 mg/dL|||||||||||||
-
-MSH|^~\&|Clarity Diagnostics|CLA-PLTUA-CD220302482CW|LIS|PC|20220819122412||ORU^R01|4|P|2.3.1||||0||ASCII|||
-PID|1||||QUICKTEST||||||||||||||||||||||||||
-OBR|1|0004|||||08/19/2022 12:06 pm||1||||||1|||||||||||||||||||||||||||||||||
-OBX|1|ST|1|LEU|      * Small|||||||||||||
-OBX|2|ST|2|NIT|   * Positive|||||||||||||
-OBX|3|ST|3|URO|    0.2 EU/dL|||||||||||||
-OBX|4|ST|4|PRO|        Trace|||||||||||||
-OBX|5|ST|5|pH |          7.5|||||||||||||
-OBX|6|ST|6|BLD|   * Moderate|||||||||||||
-OBX|7|ST|7|SG |        1.015|||||||||||||
-OBX|8|ST|8|KET|        Trace|||||||||||||
-OBX|9|ST|9|BIL|      * Small|||||||||||||
-OBX|10|ST|10|GLU|  * 250 mg/dL|||||||||||||
-
-MSH|^~\&|Clarity Diagnostics|CLA-PLTUA-CD220302482CW|LIS|PC|20220819122415||ORU^R01|5|P|2.3.1||||0||ASCII|||
-PID|1||||QUICKTEST||||||||||||||||||||||||||
-OBR|1|0002|||||08/19/2022 11:58 am||1||||||1|||||||||||||||||||||||||||||||||
-OBX|1|ST|1|LEU|     Negative|||||||||||||
-OBX|2|ST|2|NIT|     Negative|||||||||||||
-OBX|3|ST|3|URO|    0.2 EU/dL|||||||||||||
-OBX|4|ST|4|PRO|     Negative|||||||||||||
-OBX|5|ST|5|pH |          6.0|||||||||||||
-OBX|6|ST|6|BLD|     Negative|||||||||||||
-OBX|7|ST|7|SG |        1.015|||||||||||||
-OBX|8|ST|8|KET|     Negative|||||||||||||
-OBX|9|ST|9|BIL|     Negative|||||||||||||
-OBX|10|ST|10|GLU|     Negative|||||||||||||
-
-MSH|^~\&|Clarity Diagnostics|CLA-PLTUA-CD220302482CW|LIS|PC|20220819122417||ORU^R01|6|P|2.3.1||||0||ASCII|||
-PID|1||||QUICKTEST||||||||||||||||||||||||||
-OBR|1|0005|||||08/19/2022 12:10 pm||1||||||1|||||||||||||||||||||||||||||||||
-OBX|1|ST|1|LEU|     Negative|||||||||||||
-OBX|2|ST|2|NIT|     Negative|||||||||||||
-OBX|3|ST|3|URO|    0.2 EU/dL|||||||||||||
-OBX|4|ST|4|PRO|     Negative|||||||||||||
-OBX|5|ST|5|pH |          6.0|||||||||||||
-OBX|6|ST|6|BLD|     Negative|||||||||||||
-OBX|7|ST|7|SG |        1.015|||||||||||||
-OBX|8|ST|8|KET|     Negative|||||||||||||
-OBX|9|ST|9|BIL|     Negative|||||||||||||
-OBX|10|ST|10|GLU|     Negative|||||||||||||
-
-
