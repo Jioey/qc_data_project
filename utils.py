@@ -20,8 +20,9 @@ def openTextFile(filename:str) -> list[str]:
   # turn into list of string and have a copy of original
   f = rawFile.readlines()
 
-  # add an empty line - don't know why but fixed bug?
-  f.append([''])
+  # add lines for program to determine the end of the file
+  f.append('')
+  f.append('FILE END')
 
   # close file
   rawFile.close()
@@ -62,30 +63,36 @@ def getTest(f:list[str]) -> list[str]:
   # DEBUG: print(data)
 
   # removes an extra line if there is 
-  checkWarningLine(f)
+  checkLastLine(f)
   
   return data
 
 
 '''
-Checks if there is a CSR warning line at the end of a test
-and removes it if there is 
+Checks the line after a test and determine if it should pop an extra line (a warning line),
+pop only one line (the empty line between tests), or don't do anything (when there is no empty line between tests)
 
 Args:
     f (list[str]): Used as reference to the full file
 
 Returns:
-    True if a CSR line is removed and False if not
+    None
 '''
-def checkWarningLine(f:list[str]) -> bool:
-  # empty string considered False
-  # if line is not empty (meaning it's CSR Warning), then pop another line
-  # if not then if-statement pop takes away empty line 14  
-  if f.pop(0)[0:3] == 'NTE':
+def checkLastLine(f:list[str]) -> None:  
+  # DEBUG: print("f[0] here is: %s" % f[0])
+  # if next line starts w NTE, meaning it is a warning line -> pop
+  if f[0][0:3] == 'NTE':
     # DEBUG: print('CSR Line found')
     f.pop(0)
-    return True
-  return False
+
+  # if next line does not have MSH, meaning it is an empty line btwn tests -> pop
+  if f[0][1:4] != 'MSH':
+    print("empty line poped")
+    f.pop(0)
+  # note: empty line has undeterminable hidden char, so I did it this way 
+  # (had to add an extra line at end of file when imported to work w that)
+
+  # do not pop another line if MSH is there, meaning start of next test
 
 '''
 'Translates' data - replaces words with symbols based on constants.dictSymbol

@@ -35,7 +35,7 @@ class dataParser():
     # keeping count for number of machines
     counter = 1
     # keep running until file runs out
-    while f[0] != ['']:
+    while f[0] != 'FILE END':
       print("\nMachine %s --------------------------------------------------------------------" % counter)
       # get data
       idInfo = self.getIdInfo(f)
