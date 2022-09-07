@@ -43,7 +43,7 @@ class App(Tk):
       # text Entry to enter tester name
       testerEntry = Entry(testerFrame)
       # submit button that triggers generateDocuments and clears text widgets
-      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), testerEntry.delete(0, END), self.txt.delete(1.0, END)])
+      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), self.txt.delete(1.0, END)])
       # Text widget that displays loaded file & read only
       self.txt = Text(self)
       self.txt.config(state=DISABLED)
