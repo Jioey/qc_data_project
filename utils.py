@@ -26,7 +26,7 @@ def openTextFile(filename:str) -> list[str]:
 
   # add lines for program to determine the end of the file
   f.append('')
-  f.append('FILE END')
+  f.append('')
 
   # close file
   rawFile.close()
@@ -91,7 +91,7 @@ def checkLastLine(f:list[str]) -> None:
 
   # if next line does not have MSH, meaning it is an empty line btwn tests -> pop
   if f[0][1:4] != 'MSH':
-    print("empty line poped")
+    # DEBUG: print("empty line poped")
     f.pop(0)
   # note: empty line has undeterminable hidden char, so I did it this way 
   # (had to add an extra line at end of file when imported to work w that)
