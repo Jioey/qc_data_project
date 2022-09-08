@@ -1,7 +1,11 @@
 import lxml
 from mailmerge import MailMerge
-# import constants
-import constants
+import yaml
+
+# getting constants from yaml
+y = open('config.yaml')
+constants = yaml.load(y, Loader=yaml.FullLoader)
+y.close()
 
 '''
 Opens text file and returns a copy of it as a list of string
@@ -114,7 +118,7 @@ def translateData(rawData:list[list[str]]) -> list[list[str]]:
     tempList = []
     for item in test:
       # DEBUG: print("item: " + item, end=" ")
-      for word, symbol in constants.dictSymbol.items():
+      for word, symbol in constants['dictSymbol'].items():
         # replace item string
         item = item.replace(word, symbol)
       # DEBUG: print("trans: " + item, end=" ")
@@ -201,19 +205,19 @@ def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list
     # for each parameter in each control
     for j in range(10):
       # concatinate merge field/name; starting with 'KOVA-I_LEU' (KOVA-[controlNumber]_[parameterName])
-      mergeField = 'KOVA-' + kovaNumber + '_' + constants.PARAMETERS[j]
+      mergeField = 'KOVA-' + kovaNumber + '_' + constants['PARAMETERS'][j]
       # merge added field to corresponding data of index
       document.merge(**{mergeField:cleanData[i][j]})
     kovaNumber = kovaNumber + 'I'
 
   # set filename based on if QC failed and which document it is (using template name)
-  if (templateName == constants.COA_TEMPLATE_NAME):
+  if (templateName == constants['COA_TEMPLATE_NAME']):
     fname = 'documents/' + str(idInfo[0]) + '.docx'
-  elif (templateName == constants.LABSHEET_TEMPLATE_NAME):
+  elif (templateName == constants['LABSHEET_TEMPLATE_NAME']):
     fname = 'documents/' + str(idInfo[0]) + ' QC Lab Worksheet' + '.docx'
-  elif (templateName == constants.COA_FAILED_TEMPLATE_NAME):
+  elif (templateName == constants['COA_FAILED_TEMPLATE_NAME']):
     fname = 'failed documents/!' + str(idInfo[0]) + ' - Failed QC' + '.docx'
-  elif (templateName == constants.LABSHEET_FAILED_TEMPLATE_NAME):
+  elif (templateName == constants['LABSHEET_FAILED_TEMPLATE_NAME']):
     fname = 'failed documents/!' + str(idInfo[0]) + ' QC Lab Worksheet - Failed QC' + '.docx'
   else:
     raise Exception("Template name incorrect")
