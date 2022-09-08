@@ -1,8 +1,9 @@
-from tkinter import Button, Frame, Label, Tk, Entry, Text, messagebox, END, NORMAL, DISABLED
+from tkinter import Frame, Menu, Toplevel, Button, Label, Tk, Entry, Text, messagebox, END, NORMAL, DISABLED, LEFT
 from tkinter import filedialog
 import traceback
 
 from dataParser import dataParser
+from constants import allowedRangesI, allowedRangesII, allowedRangesIII
 
 '''
 A simple Tkinter UI that loads a txt file and allows user to enter tester's name
@@ -33,6 +34,10 @@ class App(Tk):
    def initUI(self) -> None:
       self.title("TECO")
       
+      # menu bar
+      menubar = Menu(self)
+      menubar.add_command(label="Allowed Ranges", command=self.showConfig)
+      self.config(menu=menubar)
 
       # button to load file
       loadButton = Button(self, text="Load File", command=self.onOpen)
@@ -131,21 +136,31 @@ class App(Tk):
             errorMsg = "Code error: %s; see full traceback in terminal" % e
             messagebox.showerror("Error", errorMsg)
 
-
-'''
+   
+   '''
    Clears Text widget in gui
    Used to do so after onSubmit()
 
-Args:
+   Args:
          txt (Text): The Text widget to clear
 
-Returns:
-      None
-'''
+   Returns:
+         None
+   '''
    def clearTextWidget(txt:Text) -> None:
       txt.config(state=NORMAL)
       txt.delete(1.0, END)
       txt.config(state=DISABLED)
+
+   
+   def showConfig(self) -> None:
+      top = Toplevel(self)
+      top.title('Allowed Ranges')
+      l1 = Label(top, justify=LEFT, font=16,
+                  text= 'KOVA I: %s\nKOVA II: %s\nKOVA III: %s' %
+                  (str(allowedRangesI), str(allowedRangesII), str(allowedRangesIII)))
+      l1.pack()
+      top.mainloop()
 
 
 '''
