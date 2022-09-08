@@ -31,19 +31,19 @@ class App(Tk):
    Initializes the UI with all its components
    '''
    def initUI(self) -> None:
-      # packing self (the Frame)
       self.title("TECO")
-      # another frame for tester input
-      testerFrame = Frame(self)
+      
 
       # button to load file
       loadButton = Button(self, text="Load File", command=self.onOpen)
       # displayed text to prompt tester name
+      # add a frame for tester input
+      testerFrame = Frame(self)
       testerLabel = Label(testerFrame, text='Tester name: ')
       # text Entry to enter tester name
       testerEntry = Entry(testerFrame)
       # submit button that triggers generateDocuments and clears text widgets
-      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), clearTextWidget(self.txt)])
+      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), self.clearTextWidget(self.txt)])
       # Text widget that displays loaded file & read only
       self.txt = Text(self)
       self.txt.config(state=DISABLED)
@@ -133,6 +133,22 @@ class App(Tk):
 
 
 '''
+   Clears Text widget in gui
+   Used to do so after onSubmit()
+
+Args:
+         txt (Text): The Text widget to clear
+
+Returns:
+      None
+'''
+   def clearTextWidget(txt:Text) -> None:
+      txt.config(state=NORMAL)
+      txt.delete(1.0, END)
+      txt.config(state=DISABLED)
+
+
+'''
 Shows Bad Machine warning text window (messagebox) with msg
 
 Args:
@@ -144,17 +160,3 @@ Returns:
 def warn(msg:str) -> None:
    messagebox.showwarning('Warning - Bad Machine', msg)
 
-'''
-Clears Text widget in gui
-Used to do so after onSubmit()
-
-Args:
-      txt (Text): The Text widget to clear
-
-Returns:
-      None
-'''
-def clearTextWidget(txt:Text) -> None:
-   txt.config(state=NORMAL)
-   txt.delete(1.0, END)
-   txt.config(state=DISABLED)
