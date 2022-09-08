@@ -1,10 +1,5 @@
 import utils
-import yaml
-
-# getting constants from yaml
-y = open('config.yaml')
-constants = yaml.load(y, Loader=yaml.FullLoader)
-y.close()
+import constants
 
 
 class dataParser():
@@ -153,9 +148,9 @@ class dataParser():
 
     # ERROR CHECK MACHINES
     # run testParameters for each control
-    self.testParameters(translatedData, 0, constants['allowedRangesI'], self.sn) # KOVA I
-    self.testParameters(translatedData, 2, constants['allowedRangesII'], self.sn) # KOVA II
-    self.testParameters(translatedData, 4, constants['allowedRangesIII'], self.sn) # KOVA III
+    self.testParameters(translatedData, 0, constants.allowedRangesI, self.sn) # KOVA I
+    self.testParameters(translatedData, 2, constants.allowedRangesII, self.sn) # KOVA II
+    self.testParameters(translatedData, 4, constants.allowedRangesIII, self.sn) # KOVA III
 
     # combine the two tests and return it
     return [utils.combineTestInfo(translatedData[0], translatedData[1]), 
@@ -183,7 +178,7 @@ class dataParser():
           from gui import warn
           self.hasFailed = True
           indexMapping = {0:'0', 1:'3', 2:'1', 3:'4', 4:'2', 5:'5'}
-          warn("Machine %s error in test %s, KOVA %s, on element %s, value is %s, should be within %s" % (sn, indexMapping.get(i), int((startInd/2)+1), constants['PARAMETERS'][j], current, allowedRanges[j]))
+          warn("Machine %s error in test %s, KOVA %s, on element %s, value is %s, should be within %s" % (sn, indexMapping.get(i), int((startInd/2)+1), constants.PARAMETERS[j], current, allowedRanges[j]))
    
         
   '''
@@ -203,10 +198,10 @@ class dataParser():
 
     if not self.hasFailed:
       # mail merge on COA and Lab Worksheet
-      utils.mailmergeToTemplates(constants['COA_TEMPLATE_NAME'], idInfo, cleanData, testerInitial)
+      utils.mailmergeToTemplates(constants.COA_TEMPLATE_NAME, idInfo, cleanData, testerInitial)
       # mail merge on Lab Worksheet w tester's full name
-      utils.mailmergeToTemplates(constants['LABSHEET_TEMPLATE_NAME'], idInfo, cleanData, tester)
+      utils.mailmergeToTemplates(constants.LABSHEET_TEMPLATE_NAME, idInfo, cleanData, tester)
     else: 
       # if has failed QC, then output using failed templates
-      utils.mailmergeToTemplates(constants['COA_FAILED_TEMPLATE_NAME'], idInfo, cleanData, testerInitial)
-      utils.mailmergeToTemplates(constants['LABSHEET_FAILED_TEMPLATE_NAME'], idInfo, cleanData, tester) 
+      utils.mailmergeToTemplates(constants.COA_FAILED_TEMPLATE_NAME, idInfo, cleanData, testerInitial)
+      utils.mailmergeToTemplates(constants.LABSHEET_FAILED_TEMPLATE_NAME, idInfo, cleanData, tester) 
