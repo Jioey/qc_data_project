@@ -43,7 +43,7 @@ class App(Tk):
       # text Entry to enter tester name
       testerEntry = Entry(testerFrame)
       # submit button that triggers generateDocuments and clears text widgets
-      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), self.txt.delete(1.0, END)])
+      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), clearTextWidget(self.txt)])
       # Text widget that displays loaded file & read only
       self.txt = Text(self)
       self.txt.config(state=DISABLED)
@@ -88,8 +88,14 @@ class App(Tk):
    Runs generateDocuments with the needed info entered from the gui
    Triggers when submit button is hit
 
+   Args:
+         tester (str): Tester name to be written on the documents
+
    Raises:
          Exception: Either filename or tester entry is empty
+
+   Returns:
+         None
    '''
    def onSubmit(self, tester:str) -> None:
       # DEBUG: usr input info printed in terminal
@@ -127,7 +133,28 @@ class App(Tk):
 
 
 '''
-shows warning text window
+Shows Bad Machine warning text window (messagebox) with msg
+
+Args:
+      msg (str): Warning message to be displayed on the messagebox
+
+Returns:
+      None
 '''
-def warn(msg):
+def warn(msg:str) -> None:
    messagebox.showwarning('Warning - Bad Machine', msg)
+
+'''
+Clears Text widget in gui
+Used to do so after onSubmit()
+
+Args:
+      txt (Text): The Text widget to clear
+
+Returns:
+      None
+'''
+def clearTextWidget(txt:Text) -> None:
+   txt.config(state=NORMAL)
+   txt.delete(1.0, END)
+   txt.config(state=DISABLED)
