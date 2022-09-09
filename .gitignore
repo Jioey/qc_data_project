@@ -4,5 +4,6 @@ build/
 documents/
 failed documents/
 *.txt
+!machineErrors.txt
 .venv/
 *.spec

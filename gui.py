@@ -176,4 +176,5 @@ Returns:
 '''
 def warn(msg:str) -> None:
    messagebox.showwarning('Warning - Bad Machine', msg)
-
+   with open('machineErrors.txt', 'a') as f:
+      f.write(msg + '\n')
