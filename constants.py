@@ -4,27 +4,25 @@ Including allowed ranges for tests, document template names, etc.
 '''
 class constants():
    def __init__(self) -> None: 
-# name of all parameters tested, in correct order
-      self.PARAMETERS = ['LEU', 'NIT', 'URO', 'PRO', 'pH', 'BLO', 'SG', 'KET', 'BIL', 'GLU']
+   '''
+   Reads constants.txt 
+   '''
+   def getConstantsFromTxt(self) -> bool:
+      with open("constants.txt", "r") as f:
+         fList = f.readlines()
 
-      # dictionary for translation
-      self.dictSymbol = {'Small':'1+', 'Moderate':'2+', 'Large':'3+', 'Positive':'(+)', 'Negative':'(-)', 'Trace':'TRA', '>=':'\u2265'}
+      self.PARAMETERS = strToList(fList[1])
+      # print(self.PARAMETERS)
 
-      # row and column name for dataframe (technically not dict too)
-      self.ROW_NAME = ['Control', 'KOVA I', 'KOVA II', 'KOVA III']
-      self.COL_NAME = self.PARAMETERS
+      self.COA_TEMPLATE_NAME, self.LABSHEET_TEMPLATE_NAME, self.COA_FAILED_TEMPLATE_NAME, self.LABSHEET_FAILED_TEMPLATE_NAME = strToList(fList[4])
+      # # print(self.LABSHEET_FAILED_TEMPLATE_NAME)
 
-      # document template names
-      self.COA_TEMPLATE_NAME = 'COA Template.docx'
-      self.LABSHEET_TEMPLATE_NAME = 'Lab Worksheet Template.docx'
-      self.COA_FAILED_TEMPLATE_NAME = 'COA Template - Failed.docx'
-      self.LABSHEET_FAILED_TEMPLATE_NAME = 'Lab Worksheet Template - Failed.docx'
+      self.allowedRangesI = strToList(fList[8], True)
+      self.allowedRangesII = strToList(fList[10], True)
+      self.allowedRangesIII = strToList(fList[12], True)
+      # print(self.allowedRangesI)
 
-# list of acceptable parameters for each control
-# in order of PARAMETERS
-      self.allowedRangesI = [['1+', '2+', '3+'], ['(+)'], ['4.0', '\u22658.0'], ['100', '\u2265300'], ['6.5', '7.0', '7.5', '8.0'], ['2+', '3+'], ['1.010', '1.015', '1.020', '1.025'], ['40', '\u226580'], ['2+', '3+'], ['500', '1000']]
-      self.allowedRangesII = [['1+', '2+', '3+'], ['(+)'], ['0.2', '1.0'], ['TRA', '30'], ['7.0', '7.5', '8.0', '8.5'], ['1+', '2+'], ['1.005', '1.010', '1.015'], ['TRA', '15', '40'], ['(-)', '1+'], ['100', '250']]
-      self.allowedRangesIII = [['(-)'], ['(-)'], ['0.2', '1.0'], ['(-)'], ['5.0', '5.5', '6.0', '6.5'], ['(-)'], ['1.005', '1.010', '1.015'], ['(-)'], ['(-)'], ['(-)']]
+      return True
 
 
 '''
