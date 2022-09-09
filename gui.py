@@ -117,7 +117,7 @@ class App(Tk):
          # if tester is empty
          messagebox.showerror("Error", "No tester name has been entered")
          raise Exception("tester empty")
-      elif (len(tester.split(" ")) != 2):
+      elif (len(tester.strip().split(" ")) != 2):
          messagebox.showwarning("Warning", "Tester name has been entered incorrectly\nPlease use the 'FirstName LastInitial.' format")
          raise Exception("tester name incorrect")
       else:

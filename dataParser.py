@@ -196,7 +196,7 @@ class dataParser():
   '''
   # writes data to new word doc using template
   def writeData(self, idInfo:list[str], cleanData:list[list[str]], tester:str) -> None:
-    testerInitial = ''.join(s[0].upper() for s in tester.split(' '))
+    testerInitial = ''.join(s[0].upper() for s in tester.strip().split(' '))
 
     if not self.hasFailed:
       # mail merge on COA and Lab Worksheet
