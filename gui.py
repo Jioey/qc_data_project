@@ -3,13 +3,14 @@ from tkinter import filedialog
 import traceback
 
 from dataParser import dataParser
-from constants import allowedRangesI, allowedRangesII, allowedRangesIII
+from constants import constants
 
 '''
 A simple Tkinter UI that loads a txt file and allows user to enter tester's name
 
 Args:
       parser (dataParser): A dataParser object to use for processing the data
+      c (constants): reference to the constants obj
 
 Attributes:
       filename (str): Instance variable that stores the input txt file's name
@@ -17,10 +18,11 @@ Attributes:
 '''
 class App(Tk):
    # init
-   def __init__(self, parser:dataParser) -> None:
+   def __init__(self, parser:dataParser, c:constants) -> None:
       super().__init__()
       # using instance variable to store filename
       self.filename = ''
+      self.c = c
       # reference to the parser obj
       self.parser = parser
       # setting window geometry
@@ -158,7 +160,7 @@ class App(Tk):
       top.title('Allowed Ranges')
       l1 = Label(top, justify=LEFT, font=16,
                   text= 'KOVA I: %s\nKOVA II: %s\nKOVA III: %s' %
-                  (str(allowedRangesI), str(allowedRangesII), str(allowedRangesIII)))
+                  (str(self.c.allowedRangesI), str(self.c.allowedRangesII), str(self.c.allowedRangesIII)))
       l1.pack()
       top.mainloop()
 
