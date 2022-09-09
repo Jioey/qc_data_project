@@ -16,8 +16,6 @@ class constants():
       self.allowedRangesII:list
       self.allowedRangesIII:list
       self.dictSymbol:dict
-      self.ROW_NAME:list
-      self.COL_NAME:list
 
       self.loadYaml()
 

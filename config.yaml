@@ -1,4 +1,5 @@
 ---
+# Parameters of the tests
 PARAMETERS: ['LEU', 'NIT', 'URO', 'PRO', 'pH', 'BLO', 'SG', 'KET', 'BIL', 'GLU']
 
 TEMPLATE_NAMES: 
@@ -9,7 +10,7 @@ TEMPLATE_NAMES:
 
 allowedRangesI: # KOVA I
  - ['1+', '2+', '3+'] # LEU
- - ['(+)']  # NIT
+ - ['(+)'] # NIT
  - ['4.0', '\u22658.0'] # URO
  - ['100', '\u2265300'] # PRO
  - ['6.5', '7.0', '7.5', '8.0'] # pH
@@ -19,29 +20,29 @@ allowedRangesI: # KOVA I
  - ['2+', '3+'] # BIL
  - ['500', '1000']  # GLU
 
-allowedRangesII:
-  - ['1+', '2+', '3+']
-  - ['(+)']
-  - ['0.2', '1.0']
-  - ['TRA', '30']
-  - ['7.0', '7.5', '8.0', '8.5']
-  - ['1+', '2+']
-  - ['1.005', '1.010', '1.015']
-  - ['TRA', '15', '40']
-  - ['(-)', '1+']
-  - ['100', '250']
+allowedRangesII: # KOVA II
+  - ['1+', '2+', '3+'] # LEU
+  - ['(+)'] # NIT
+  - ['0.2', '1.0'] # URO
+  - ['TRA', '30'] # PRO
+  - ['7.0', '7.5', '8.0', '8.5'] # pH
+  - ['1+', '2+'] # BLO
+  - ['1.005', '1.010', '1.015'] # SG
+  - ['TRA', '15', '40'] # KET
+  - ['(-)', '1+'] # BIL
+  - ['100', '250'] # GLU
 
-allowedRangesIII:
-  - ['(-)']
-  - ['(-)']
-  - ['0.2', '1.0']
-  - ['(-)']
-  - ['5.0', '5.5', '6.0', '6.5']
-  - ['(-)']
-  - ['1.005', '1.010', '1.015']
-  - ['(-)']
-  - ['(-)']
-  - ['(-)']
+allowedRangesIII: # KOVA III
+  - ['(-)'] # LEU
+  - ['(-)'] # NIT
+  - ['0.2', '1.0'] # URO
+  - ['(-)'] # PRO
+  - ['5.0', '5.5', '6.0', '6.5'] # pH
+  - ['(-)'] # BLO
+  - ['1.005', '1.010', '1.015'] # SG
+  - ['(-)'] # KET
+  - ['(-)'] # BIL
+  - ['(-)'] # GLU
 
 # dictionary for translation
 dictSymbol:
@@ -52,12 +53,3 @@ dictSymbol:
   'Negative': '(-)'
   'Trace': 'TRA'
   '>=': '\u2265'
-
-# row and column name for dataframe
-ROW_NAME:
-  - 'Control'
-  - 'KOVA I'
-  - 'KOVA II'
-  - 'KOVA III'
-
-COL_NAME: PARAMETERS
