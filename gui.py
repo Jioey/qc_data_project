@@ -149,7 +149,7 @@ class App(Tk):
    Returns:
          None
    '''
-   def clearTextWidget(txt:Text) -> None:
+   def clearTextWidget(self, txt:Text) -> None:
       txt.config(state=NORMAL)
       txt.delete(1.0, END)
       txt.config(state=DISABLED)
