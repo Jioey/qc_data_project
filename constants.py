@@ -10,24 +10,42 @@ class constants():
    Called when object is created
    '''   
    def __init__(self) -> None: 
+      # initializing constants 
       self.PARAMETERS:list
-      self.TEMPLATE_NAMES:list
+      self.dictSymbol:dict
+      # template names
+      self.COA_TEMPLATE_NAME:str
+      self.LABSHEET_TEMPLATE_NAME:str
+      self.COA_FAILED_TEMPLATE_NAME:str
+      self.LABSHEET_FAILED_TEMPLATE_NAME:str
+      # allowed ranges
       self.allowedRangesI:list
       self.allowedRangesII:list
       self.allowedRangesIII:list
-      self.dictSymbol:dict
 
       self.loadYaml()
 
    '''
-   Load constants from yaml
+   Load all constants from config.yaml
    '''
-   def loadYaml(self):
-      with open("example.yaml", "r") as stream:
-         try:
-            print(yaml.safe_load(stream))
-         except yaml.YAMLError as exc:
-            print(exc)
+   def loadYaml(self) -> None:
+      # open and read config.yaml
+      with open("config.yaml", "r") as file:
+         stream:dict # type hinting dictionary
+         stream = yaml.safe_load(file) # safely load the yaml file
+
+      # setting constants   
+      self.PARAMETERS = stream.get('PARAMETERS')
+      self.dictSymbol = stream.get('dictSymbol')
+      # template names
+      self.COA_TEMPLATE_NAME = stream.get('COA_TEMPLATE_NAME')
+      self.LABSHEET_TEMPLATE_NAME = stream.get('LABSHEET_TEMPLATE_NAME')
+      self.COA_FAILED_TEMPLATE_NAME = stream.get('COA_FAILED_TEMPLATE_NAME')
+      self.LABSHEET_FAILED_TEMPLATE_NAME = stream.get('LABSHEET_FAILED_TEMPLATE_NAME')
+      # allowed ranges
+      self.allowedRangesI = stream.get('allowedRangesI')
+      self.allowedRangesII = stream.get('allowedRangesII')
+      self.allowedRangesIII = stream.get('allowedRangesIII')
 
    '''
    Read COA Template docx and write new ranges onto yaml, then reload the yaml
@@ -55,4 +73,3 @@ class constants():
 # for debug use
 if __name__ == '__main__':
    c = constants()
-   c.loadYaml()
