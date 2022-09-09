@@ -4,6 +4,5 @@ build/
 documents/
 failed documents/
 *.txt
-!constants.txt
 .venv/
 *.spec
