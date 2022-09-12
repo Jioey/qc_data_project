@@ -27,15 +27,6 @@ class constants():
 
 
    '''
-   Updates constants by reading the template for ranges,
-   write to the config file, then load it to the program
-   '''
-   def updateConstants(self) -> None:
-      self.updateYaml(self.readTemplateRanges())
-      self.loadYaml()
-
-
-   '''
    Load all constants from config.yaml
    '''
    def loadYaml(self) -> None:
@@ -56,42 +47,6 @@ class constants():
       self.allowedRangesI = stream.get('allowedRangesI')
       self.allowedRangesII = stream.get('allowedRangesII')
       self.allowedRangesIII = stream.get('allowedRangesIII')
-
-
-   '''
-   Updates config.yaml based on newConfig
-
-   Args:
-         newConfig (list): List of 30 lists of allowed ranges (in str), from readTemplateRanges()
-
-   Returns:
-         None
-   '''
-   def updateYaml(self, newConfig:list) -> None:
-      yaml = ruamel.yaml.YAML()
-
-      # opens yaml file while preserving encoding & quotes
-      with open('config.yaml', encoding="utf-8") as fp:
-         yaml.preserve_quotes = True
-         data = yaml.load(fp)
-      
-      # turning all lists in newConfig into ruamel.yaml.CommentSeq
-      # allows us to set flow style to output yaml
-      l = []
-      for i in newConfig:
-         l.append(seq(i))
-
-      # update ranges based on appropriate pos of ranges
-      data.update({'allowedRangesI': l[0:10]})
-      data.update({'allowedRangesII': l[10:20]})
-      data.update({'allowedRangesIII': l[20:30]})
-
-      # more yaml formatting
-      yaml.indent(mapping=2, sequence=3, offset=1)
-      
-      # write the updated data back onto the yaml file
-      with open('config.yaml', 'w', encoding="utf-8") as fp:
-         yaml.dump(data, fp)
 
 
    def updateTemplateRange(self) -> None:
@@ -117,6 +72,57 @@ class constants():
       except Exception as e:
          if type(e) == PermissionError: raise Exception("Please close all opened templates")
          else: raise e
+
+
+   '''
+   (Row and col of the table)
+   '''
+   def rangeToText(self, row:int, col:int, isCOA:bool) -> str:
+      if row == 1:
+         ranges = self.allowedRangesI
+      elif row == 2:
+         ranges = self.allowedRangesII
+      elif row == 3:
+         ranges = self.allowedRangesIII
+      else:
+         raise IndexError("Row index out of range")
+
+      # get the range (one range)
+      r = ranges[col-1].copy()
+
+      if isCOA:
+         # add additional edits for COA
+         for i in range(len(r)):
+            for s, replacement in {"TRA":"Trace", "(-)":"NEG (-)",  "(+)":"POS (+)"}.items():
+               r[i] = r[i].replace(s, replacement)
+
+         # adding units where necessary
+         if col == 3: # URO
+            r[-1] = r[-1] + " EU/dL" 
+         elif col in [4, 8, 10]: # PRO, KET, GLU
+            if r[-1] != "NEG (-)":
+               r[-1] = r[-1] + " mg/dL" 
+
+         # add 'to' when appropriate
+         if len(r) > 1:
+            return r[0] + " to " + r[-1]
+         else:
+            return r[0]
+      else:
+         # add '-' when appropriate
+         if len(r) > 1:
+            return r[0] + " - " + r[-1]
+         else:
+            return r[0]
+
+
+   '''
+   Updates constants by reading the template for ranges,
+   write to the config file, then load it to the program
+   '''
+   def updateConstants(self) -> None:
+      self.updateYaml(self.readTemplateRanges())
+      self.loadYaml()
 
 
    '''
@@ -162,47 +168,41 @@ class constants():
       # DEBUG: print(processedRanges)
       return processedRanges
 
-
+      
    '''
-   (Row and col of the table)
+   Updates config.yaml based on new constants
+
+   Args:
+         newConfig (list): List of 30 lists of allowed ranges (in str), from readTemplateRanges()
+
+   Returns:
+         None
    '''
-   def rangeToText(self, row:int, col:int, isCOA:bool) -> str:
-      if row == 1:
-         ranges = self.allowedRangesI
-      elif row == 2:
-         ranges = self.allowedRangesII
-      elif row == 3:
-         ranges = self.allowedRangesIII
-      else:
-         raise IndexError("Row index out of range")
+   def updateYaml(self, newConfig:list) -> None:
+      yaml = ruamel.yaml.YAML()
 
-      # get the range (one range)
-      r = ranges[col-1].copy()
+      # opens yaml file while preserving encoding & quotes
+      with open('config.yaml', encoding="utf-8") as fp:
+         yaml.preserve_quotes = True
+         data = yaml.load(fp)
+      
+      # turning all lists in newConfig into ruamel.yaml.CommentSeq
+      # allows us to set flow style to output yaml
+      l = []
+      for i in newConfig:
+         l.append(seq(i))
 
-      if isCOA:
-         # add additional edits for COA
-         for i in range(len(r)):
-            for s, replacement in {"TRA":"Trace", "(-)":"NEG (-)",  "(+)":"POS (+)"}.items():
-               r[i] = r[i].replace(s, replacement)
+      # update ranges based on appropriate pos of ranges
+      data.update({'allowedRangesI': l[0:10]})
+      data.update({'allowedRangesII': l[10:20]})
+      data.update({'allowedRangesIII': l[20:30]})
 
-         # adding units where necessary
-         if col == 3: # URO
-            r[-1] = r[-1] + " EU/dL" 
-         elif col in [4, 8, 10]: # PRO, KET, GLU
-            if r[-1] != "NEG (-)":
-               r[-1] = r[-1] + " mg/dL" 
-
-         # add 'to' when appropriate
-         if len(r) > 1:
-            return r[0] + " to " + r[-1]
-         else:
-            return r[0]
-      else:
-         # add '-' when appropriate
-         if len(r) > 1:
-            return r[0] + " - " + r[-1]
-         else:
-            return r[0]
+      # more yaml formatting
+      yaml.indent(mapping=2, sequence=3, offset=1)
+      
+      # write the updated data back onto the yaml file
+      with open('config.yaml', 'w', encoding="utf-8") as fp:
+         yaml.dump(data, fp)
 
 
 '''
