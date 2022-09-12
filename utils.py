@@ -66,7 +66,7 @@ def getTest(f:list[str]) -> tuple[list[str], str]:
   checkLastLine(f)
   
   # replace w number representing kovaID and raise exception if none found
-  kovaKey = {'QUICKTEST':0, 'KOVA I':1, 'KOVA II':2, 'KOVA III':3}.get(kovaID)
+  kovaKey = {'QUICKTEST':0, 'KOVA I':1, 'KOVA II':2, 'KOVA III':3}.get(kovaID.upper())
   if kovaKey == None:
     raise Exception("Patient ID invalid")
 
