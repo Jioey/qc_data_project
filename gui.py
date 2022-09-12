@@ -130,12 +130,8 @@ class App(Tk):
          try:
             # try generating data
             self.parser.generateDocuments(self.filename, tester)
-            # if (self.parser.isErrorMachine):
-            #    # shows warning text window
-            #    for msg in self.parser.errMsgList:
-            #       messagebox.showwarning('Warning - Bad Machine', msg)
             # Generated documents comfirmation
-            messagebox.showinfo("TECO",  "Documents generated successfully")
+            showConfirm("Documents generated")
          except Exception as e:
             # print traceback msg
             traceback.print_exc()
@@ -184,3 +180,6 @@ def warn(msg:str) -> None:
    messagebox.showwarning('Warning - Bad Machine', msg)
    with open('machineErrors.txt', 'a', encoding="utf-8") as f:
       f.write(msg + '\n')
+
+def showConfirm(action:str='') -> None:
+   messagebox.showinfo("TECO",  action + ' successfully')
