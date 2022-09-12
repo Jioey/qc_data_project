@@ -71,7 +71,6 @@ class dataParser():
 
   '''
   Gets serial number, date, and time from the txt file
-  Must be run before getTests!!
 
   Args:
       f (list[str]): txt file in the format of a list of str
@@ -107,7 +106,7 @@ class dataParser():
 
   '''
   Gets the test data of one machine from f and turns it into a 2D list
-  WARNING: deletes each line as the code traverses through f
+  WARNING: deletes each line from f as the code traverses through f
 
   Args:
       f (list[str]): txt file in the format of a list of str
@@ -118,19 +117,25 @@ class dataParser():
   def getTests(self, f:list[str]) -> list[list[str]]:
     # returning 2d array
     allData = []
-
+    
     for i in range(6):
       # DEBUG: print("test %s" % (i+1))
       allData.append(utils.getTest(f))
-    # print("\n")
 
-    # reorganize data list in KOVA I, II, III, I, II, III order
-    kovaOrder = [0, 3, 1, 4, 2, 5]
-    allData = [allData[i] for i in kovaOrder]
-    for i in allData:
-      print(i)    
-
-    return allData
+    if 0 in [i[1] for i in allData]:
+      from gui import warn
+      warn("A test has QUICKTEST patient ID; using order of data input...")
+      # changes allData from list of tuples (w kovakey) to list of list
+      allData = [i for i, j in allData]
+      # reorganize data list from KOVA I, II, III, I, II, III order to I I II II III III
+      kovaOrder = [0, 3, 1, 4, 2, 5]
+      allData = [allData[i] for i in kovaOrder]
+      return allData
+    else:
+      # sort based on kova key
+      allData.sort(key=lambda y: y[1])
+      # DEBUG: print([i for i, j in allData])
+      return [i for i, j in allData]
 
 
   '''

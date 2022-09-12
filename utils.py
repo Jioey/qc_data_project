@@ -37,12 +37,13 @@ Args:
     f (list[str]): The arg is used as reference to the full file
 
 Returns:
-    data (list[str]): The list of results of one test
+    list[str]: Data/The list of results of one test
+    int: kovaKey based on kovaId
 '''
-def getTest(f:list[str]) -> list[str]:
+def getTest(f:list[str]) -> tuple[list[str], str]:
   # pop out info lines (top)
   f.pop(0)
-  f.pop(0) # Includes patient id, will be used for identifying KOVA test
+  kovaID = list(filter(None, f.pop(0).split("|")))[2] # Includes patient id, used for identifying KOVA test
   f.pop(0)
 
   # get the data
@@ -64,7 +65,12 @@ def getTest(f:list[str]) -> list[str]:
   # removes an extra line if there is 
   checkLastLine(f)
   
-  return data
+  # replace w number representing kovaID and raise exception if none found
+  kovaKey = {'QUICKTEST':0, 'KOVA I':1, 'KOVA II':2, 'KOVA III':3}.get(kovaID)
+  if kovaKey == None:
+    raise Exception("Patient ID invalid")
+
+  return data, kovaKey
 
 
 '''
@@ -131,11 +137,6 @@ def translateData(rawData:list[list[str]], dictSymbol:dict) -> list[list[str]]:
   return data
 
 
-"""
-##combineTestInfo(test1, test2)
-Combine two tests into one list
-Returns combined, clean list
-"""
 '''
 Combines two lists of single test results into one list
 
