@@ -220,3 +220,8 @@ def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list
 
   # write new file
   document.write(fname)
+
+
+# for debug use
+if __name__ == '__main__':
+  openTextFile('../(905)demotext.txt')
