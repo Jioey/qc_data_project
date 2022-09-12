@@ -161,7 +161,7 @@ class constants():
       
       # DEBUG: print(processedRanges)
       return processedRanges
-   
+
 
    '''
    (Row and col of the table)
@@ -217,40 +217,46 @@ Returns:
       list[str]: the list of all possible ranges given the start & end
 '''
 def generateInterval(start:str, end:str) -> list[str]:
-   # for 1+/2+/3+ format (LEU, BLO, BIL)
-   if start in ['1+', '2+', '3+']:
-      outputRange = []
-      for i in range(int(start[0]), int(end[0]) + 1):
-         outputRange.append(str(i) + '+')
-      return outputRange
+   try:
+      # for 1+/2+/3+ format (LEU, BLO, BIL)
+      if start in ['1+', '2+', '3+']:
+         outputRange = []
+         for i in range(int(start[0]), int(end[0]) + 1):
+            outputRange.append(str(i) + '+')
+         return outputRange
 
-   # for URO
-   if start in ['0.2', '1.0', '4.0']:
-      return [start, end]
+      # for URO
+      if start in ['0.2', '1.0', '4.0']:
+         return [start, end]
 
-   # for PRO
-   if start in ['100', 'Trace']:
-      return ['TRA' if s=='Trace' else s for s in [start, end]]
+      # for PRO
+      if start in ['100', 'Trace']:
+         return ['TRA' if s=='Trace' else s for s in [start, end]]
 
-   # for pH
-   if start in ['5.0', '5.5', '6.0', '6.5', '7.0', '7.5', '8.0', '8.5']:
-      start = int(float(start) * 2)
-      end = int(float(end) * 2)
-      return [str(i/2) for i in range(start, end + 1)]
-   
-   # for SG
-   if start in ['1.000', '1.005', '1.010', '1.015', '1.020']:
-      start = int(start[3:5])
-      end = int(end[3:5])
-      return ['1.0' + str(i) for i in range(start, end + 5, 5)]
-   
-   # for KET - TODO: add 15
-   if start in ['40', '\u226580']:
-      return [start, end]
+      # for pH
+      if start in ['5.0', '5.5', '6.0', '6.5', '7.0', '7.5', '8.0', '8.5']:
+         start = int(float(start) * 2)
+         end = int(float(end) * 2)
+         return [str(i/2) for i in range(start, end + 1)]
+      
+      # for SG
+      if start in ['1.000', '1.005', '1.010', '1.015', '1.020']:
+         start = int(start[3:5])
+         end = int(end[3:5])
+         return ['1.0' + str(i) for i in range(start, end + 5, 5)]
+      
+      # for KET - TODO: add 15
+      if start in ['40', '\u226580']:
+         return [start, end]
 
-   # for GLU
-   if start in ['100', '500']:
-      return [start, end]
+      # for GLU
+      if start in ['100', '500']:
+         return [start, end]
+
+      raise Exception()
+   except:
+      print("Ranges from template not included in code")
+      raise Exception("Ranges from template not included in code")
 
 
 '''
