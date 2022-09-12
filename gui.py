@@ -38,7 +38,12 @@ class App(Tk):
       
       # menu bar
       menubar = Menu(self)
-      menubar.add_command(label="Allowed Ranges", command=self.showConfig)
+      configMenu = Menu(menubar, tearoff=0)
+      configMenu.add_command(label="Load Config File", command=lambda:[self.c.loadYaml(), showConfirm('Configs loaded')])
+      configMenu.add_command(label="Update Configs from COA Template", command=lambda:[self.c.updateConstants, showConfirm('Configs updated')])
+      configMenu.add_command(label="Show Allowed Ranges", command=self.showConfig)
+      menubar.add_cascade(label="Config", menu=configMenu)
+      
       self.config(menu=menubar)
 
       # button to load file
