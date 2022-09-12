@@ -94,6 +94,31 @@ class constants():
          yaml.dump(data, fp)
 
 
+   def updateTemplateRange(self) -> None:
+      try:
+         import docx
+
+         COA_doc = docx.Document('templates/' + self.COA_TEMPLATE_NAME)
+         COA_F_doc = docx.Document('templates/' + self.COA_FAILED_TEMPLATE_NAME)
+         Lab_doc = docx.Document('templates/' + self.LABSHEET_TEMPLATE_NAME)
+         Lab_F_doc = docx.Document('templates/' + self.LABSHEET_FAILED_TEMPLATE_NAME)
+         for r in range(1, 4):
+            for c in range(1, 11):
+               writeCell(COA_doc, r, c, self.rangeToText(r, c, True), True)
+               writeCell(COA_F_doc, r, c, self.rangeToText(r, c, True), True)
+               writeCell(Lab_doc, r, c, self.rangeToText(r, c, False), False)
+               writeCell(Lab_F_doc, r, c, self.rangeToText(r, c, False), False)
+
+         COA_doc.save('templates/' + self.COA_TEMPLATE_NAME)
+         COA_F_doc.save('templates/' + self.COA_FAILED_TEMPLATE_NAME)
+         Lab_doc.save('templates/' + self.LABSHEET_TEMPLATE_NAME)
+         Lab_F_doc.save('templates/' + self.LABSHEET_FAILED_TEMPLATE_NAME)
+
+      except Exception as e:
+         if type(e) == PermissionError: raise Exception("Please close all opened templates")
+         else: raise e
+
+
    '''
    Read COA Template docx and write new ranges onto yaml, then reload the yaml
 
@@ -138,9 +163,46 @@ class constants():
       return processedRanges
    
 
-   # TODO
-   def updateOtherTemplates(self, newConfig:list):
-      pass
+   '''
+   (Row and col of the table)
+   '''
+   def rangeToText(self, row:int, col:int, isCOA:bool) -> str:
+      if row == 1:
+         ranges = self.allowedRangesI
+      elif row == 2:
+         ranges = self.allowedRangesII
+      elif row == 3:
+         ranges = self.allowedRangesIII
+      else:
+         raise IndexError("Row index out of range")
+
+      # get the range (one range)
+      r = ranges[col-1].copy()
+
+      if isCOA:
+         # add additional edits for COA
+         for i in range(len(r)):
+            for s, replacement in {"TRA":"Trace", "(-)":"NEG (-)",  "(+)":"POS (+)"}.items():
+               r[i] = r[i].replace(s, replacement)
+
+         # adding units where necessary
+         if col == 3: # URO
+            r[-1] = r[-1] + " EU/dL" 
+         elif col in [4, 8, 10]: # PRO, KET, GLU
+            if r[-1] != "NEG (-)":
+               r[-1] = r[-1] + " mg/dL" 
+
+         # add 'to' when appropriate
+         if len(r) > 1:
+            return r[0] + " to " + r[-1]
+         else:
+            return r[0]
+      else:
+         # add '-' when appropriate
+         if len(r) > 1:
+            return r[0] + " - " + r[-1]
+         else:
+            return r[0]
 
 
 '''
@@ -207,7 +269,32 @@ def seq(l:list[str]) -> ruamel.yaml.CommentedSeq:
    return s
 
 
+'''
+Write text to designated cell and set appropriate formatting
+'''
+def writeCell(doc, row:int, col:int, text:str, isCOA:bool) -> None:
+   from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+   # get the table
+   if isCOA:      
+      table = doc.tables[3]
+   else:
+      table = doc.tables[6]
+   # get cell 
+   cell = table.cell(row, col)
+   # set cell text
+   cell.text = text
+   # get paragraph
+   paragraph = cell.paragraphs[0]
+   # set text alignment
+   paragraph.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+   # set text font
+   run = paragraph.runs
+   run[0].font.name = 'Arial'   
+
+
 # for debug use
 if __name__ == '__main__':
    c = constants()
-   c.updateConstants()
+   # c.updateConstants()
+   c.updateTemplateRange()
