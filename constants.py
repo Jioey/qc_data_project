@@ -1,9 +1,9 @@
+import ruamel.yaml
+
 '''
 Constants - Reads text file and loads the constants in them
 Including allowed ranges for tests, document template names, etc.
 '''
-import yaml
-
 class constants():
    '''
    Initializes instance variables and sets them by reading the yaml
@@ -25,14 +25,24 @@ class constants():
 
       self.loadYaml()
 
+
+   '''
+   Updates constants by reading the template for ranges,
+   write to the config file, then load it to the program
+   '''
+   def updateConstants(self) -> None:
+      self.updateYaml(self.readTemplateRanges())
+      self.loadYaml()
+
+
    '''
    Load all constants from config.yaml
    '''
    def loadYaml(self) -> None:
       # open and read config.yaml
-      with open("config.yaml", "r") as file:
-         stream:dict # type hinting dictionary
-         stream = yaml.safe_load(file) # safely load the yaml file
+      with open("config.yaml", "r", encoding="utf-8") as file:
+         # stream:dict # type hinting dictionary
+         stream = ruamel.yaml.safe_load(file) # safely load the yaml file
 
       # setting constants   
       self.PARAMETERS = stream.get('PARAMETERS')
@@ -47,29 +57,157 @@ class constants():
       self.allowedRangesII = stream.get('allowedRangesII')
       self.allowedRangesIII = stream.get('allowedRangesIII')
 
+
+   '''
+   Updates config.yaml based on newConfig
+
+   Args:
+         newConfig (list): List of 30 lists of allowed ranges (in str), from readTemplateRanges()
+
+   Returns:
+         None
+   '''
+   def updateYaml(self, newConfig:list) -> None:
+      yaml = ruamel.yaml.YAML()
+
+      # opens yaml file while preserving encoding & quotes
+      with open('config.yaml', encoding="utf-8") as fp:
+         yaml.preserve_quotes = True
+         data = yaml.load(fp)
+      
+      # turning all lists in newConfig into ruamel.yaml.CommentSeq
+      # allows us to set flow style to output yaml
+      l = []
+      for i in newConfig:
+         l.append(seq(i))
+
+      # update ranges based on appropriate pos of ranges
+      data.update({'allowedRangesI': l[0:10]})
+      data.update({'allowedRangesII': l[10:20]})
+      data.update({'allowedRangesIII': l[20:30]})
+
+      # more yaml formatting
+      yaml.indent(mapping=2, sequence=3, offset=1)
+      
+      # write the updated data back onto the yaml file
+      with open('config.yaml', 'w', encoding="utf-8") as fp:
+         yaml.dump(data, fp)
+
+
    '''
    Read COA Template docx and write new ranges onto yaml, then reload the yaml
+
+   Args:
+         None
+   
+   Returns:
+         list: List of 30 lists of allowed ranges (in str) read from COA Template
    '''
-   def updateConstants(self):
+   def readTemplateRanges(self) -> list:
       from docx2python import docx2python
       # extract docx content
-      doc_result = docx2python('templates/COA Template.docx').body
-      # get separate components of the document
-      tolerenceRanges = doc_result[7]
-      kovaI = tolerenceRanges[1][1:11]
-      kovaII = tolerenceRanges[2][1:11]
-      kovaIII = tolerenceRanges[3][1:11]
+      doc_result = docx2python('templates/' + self.COA_TEMPLATE_NAME).body
+      # extract tolerence range and store them in one long list
+      doc_result = doc_result[7]
+      templateRanges = doc_result[1][1:11]
+      templateRanges.extend(doc_result[2][1:11])
+      templateRanges.extend(doc_result[3][1:11])
 
-      for i in kovaI:
-         print(i)
-      print("\n")
-      for i in kovaII:
-         print(i)
-      print("\n")
-      for i in kovaIII:
-         print(i)
+      # DEBUG: print(templateRanges) # is list[list[str]] 
+
+      processedRanges = []
+      for range in templateRanges:
+         # take it out of the weird list format
+         range = range[0].split(' ')
+
+         # DEBUG: range = ['sample ranges here']
+         # if range is actually a range
+         if 'to' in range:
+            # for BIL, when NEG is in range too
+            if range[0] == 'NEG':
+               # adds (-) then generate the list of ranges from 1+ to end
+               processedRanges.append(["(-)"] + generateInterval('1+', range[3]))
+            else:
+               # else, generateInterval()
+               processedRanges.append(generateInterval(range[0], range[2]))
+         else: 
+            # when not range, it's a +/-, so tae range[1] (where the symbol is)
+            processedRanges.append([range[1]])
+      
+      # DEBUG: print(processedRanges)
+      return processedRanges
+   
+
+   # TODO
+   def updateOtherTemplates(self, newConfig:list):
+      pass
+
+
+'''
+Generates interval of allowed ranges from start to end
+Not very smart tho
+
+Args:
+      start (str): starting range
+      end (str): sending range
+
+Returns:
+      list[str]: the list of all possible ranges given the start & end
+'''
+def generateInterval(start:str, end:str) -> list[str]:
+   # for 1+/2+/3+ format (LEU, BLO, BIL)
+   if start in ['1+', '2+', '3+']:
+      outputRange = []
+      for i in range(int(start[0]), int(end[0]) + 1):
+         outputRange.append(str(i) + '+')
+      return outputRange
+
+   # for URO
+   if start in ['0.2', '1.0', '4.0']:
+      return [start, end]
+
+   # for PRO
+   if start in ['100', 'Trace']:
+      return ['TRA' if s=='Trace' else s for s in [start, end]]
+
+   # for pH
+   if start in ['5.0', '5.5', '6.0', '6.5', '7.0', '7.5', '8.0', '8.5']:
+      start = int(float(start) * 2)
+      end = int(float(end) * 2)
+      return [str(i/2) for i in range(start, end + 1)]
+   
+   # for SG
+   if start in ['1.000', '1.005', '1.010', '1.015', '1.020']:
+      start = int(start[3:5])
+      end = int(end[3:5])
+      return ['1.0' + str(i) for i in range(start, end + 5, 5)]
+   
+   # for KET - TODO: add 15
+   if start in ['40', '\u226580']:
+      return [start, end]
+
+   # for GLU
+   if start in ['100', '500']:
+      return [start, end]
+
+
+'''
+Helper func for updateYaml,
+Neccessary for setting output yaml in flow style (instead of block)
+
+Args:
+      l (list[str]): 
+
+Returns:
+      CommentedSeq: The ramual.yaml compatible version of the list
+'''
+def seq(l:list[str]) -> ruamel.yaml.CommentedSeq:
+   s = ruamel.yaml.comments.CommentedSeq(l)
+   s.fa.set_flow_style()
+   return s
 
 
 # for debug use
 if __name__ == '__main__':
    c = constants()
+   c.updateConstants()
