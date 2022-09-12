@@ -167,6 +167,7 @@ class App(Tk):
 
 '''
 Shows Bad Machine warning text window (messagebox) with msg
+Then writes it to machineErrors.txt
 
 Args:
       msg (str): Warning message to be displayed on the messagebox
@@ -176,5 +177,5 @@ Returns:
 '''
 def warn(msg:str) -> None:
    messagebox.showwarning('Warning - Bad Machine', msg)
-   with open('machineErrors.txt', 'a') as f:
+   with open('machineErrors.txt', 'a', encoding="utf-8") as f:
       f.write(msg + '\n')
