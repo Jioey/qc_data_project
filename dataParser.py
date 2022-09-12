@@ -176,7 +176,7 @@ class dataParser():
       for j in range(10):
         current = data[i][j]
         # if parameter is not in accepted ranges, then warns usr
-        if current not in allowedRanges[j]:
+        if current not in str(allowedRanges[j]):
           from gui import warn
           self.hasFailed = True
           indexMapping = {0:'0', 1:'3', 2:'1', 3:'4', 4:'2', 5:'5'}
