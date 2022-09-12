@@ -39,7 +39,7 @@ class App(Tk):
       # menu bar
       menubar = Menu(self)
       configMenu = Menu(menubar, tearoff=0)
-      configMenu.add_command(label="Update Constants from Config File", command=lambda:[self.c.loadYaml(), self.c.updateTemplateRange(), showConfirm('Constants loaded and templates updated')])
+      configMenu.add_command(label="Update Ranges from Config File", command=lambda:[print("Loading config file..."), self.c.loadYaml(), self.c.updateTemplateRange(), showConfirm('Constants loaded and templates updated')])
       # configMenu.add_command(label="Update Configs from COA Template", command=lambda:[self.c.updateConstants, showConfirm('Configs updated')])
       configMenu.add_command(label="Show Allowed Ranges", command=self.showConfig)
       menubar.add_cascade(label="Config", menu=configMenu)
