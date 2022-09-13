@@ -7,10 +7,11 @@ import gui
 import dataParser
 from constants import constants
 
-'''
-For 901 update of the TC-201
-'''
+
 if __name__ == '__main__':
+    '''
+    For 905 update of the TC-201
+    '''
     c = constants()
     # root of tkinter
     ui = gui.App(dataParser.dataParser(c), c)

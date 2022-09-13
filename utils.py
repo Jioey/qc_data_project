@@ -2,16 +2,16 @@ import lxml
 from mailmerge import MailMerge
 from constants import constants
 
-'''
-Opens text file and returns a copy of it as a list of string
-
-Args:
-    filename (str): The name of the file to be opened
-
-Returns:
-    f (list[str]): The text file's content in list format
-'''
 def openTextFile(filename:str) -> list[str]:
+  '''
+  Opens text file and returns a copy of it as a list of string
+
+  Args:
+      filename (str): The name of the file to be opened
+
+  Returns:
+      f (list[str]): The text file's content in list format
+  '''
   # open file
   rawFile = open(filename, "r")
   # DEBUG: rawFile = open("demotextOld.txt", "r")
@@ -30,17 +30,17 @@ def openTextFile(filename:str) -> list[str]:
   return f.copy()
 
 
-'''
-Gets data of one test from f and turns it into a list
-
-Args:
-    f (list[str]): The arg is used as reference to the full file
-
-Returns:
-    list[str]: Data/The list of results of one test
-    int: kovaKey based on kovaId
-'''
 def getTest(f:list[str]) -> tuple[list[str], str]:
+  '''
+  Gets data of one test from f and turns it into a list
+
+  Args:
+      f (list[str]): The arg is used as reference to the full file
+
+  Returns:
+      list[str]: Data/The list of results of one test
+      int: kovaKey based on kovaId
+  '''
   # pop out info lines (top)
   f.pop(0)
   kovaID = list(filter(None, f.pop(0).split("|")))[2] # Includes patient id, used for identifying KOVA test
@@ -73,17 +73,17 @@ def getTest(f:list[str]) -> tuple[list[str], str]:
   return data, kovaKey
 
 
-'''
-Checks the line after a test and determine if it should pop an extra line (a warning line),
-pop only one line (the empty line between tests), or don't do anything (when there is no empty line between tests)
-
-Args:
-    f (list[str]): Used as reference to the full file
-
-Returns:
-    None
-'''
 def checkLastLine(f:list[str]) -> None:  
+  '''
+  Checks the line after a test and determine if it should pop an extra line (a warning line),
+  pop only one line (the empty line between tests), or don't do anything (when there is no empty line between tests)
+
+  Args:
+      f (list[str]): Used as reference to the full file
+
+  Returns:
+      None
+  '''
   # DEBUG: print("f[0] here is: %s" % f[0])
   # if next line starts w NTE, meaning it is a warning line -> pop
   if f[0][0:3] == 'NTE':
@@ -99,17 +99,18 @@ def checkLastLine(f:list[str]) -> None:
 
   # do not pop another line if MSH is there, meaning start of next test
 
-'''
-'Translates' data - replaces words with symbols based on constants.dictSymbol
-e.g. 'Positive' to '(+)'
 
-Args:
-    rawData (list[list[str]): The list of data, from results of one machine, to be translated
-
-Returns:
-    data (list[list[str]): The translated list of results
-'''
 def translateData(rawData:list[list[str]], dictSymbol:dict) -> list[list[str]]:
+  '''
+  'Translates' data - replaces words with symbols based on constants.dictSymbol
+  e.g. 'Positive' to '(+)'
+
+  Args:
+      rawData (list[list[str]): The list of data, from results of one machine, to be translated
+
+  Returns:
+      data (list[list[str]): The translated list of results
+  '''
   data = []
   # TRANSLATION (size, +/-, and trace)
   # for each test in rawData
@@ -137,17 +138,17 @@ def translateData(rawData:list[list[str]], dictSymbol:dict) -> list[list[str]]:
   return data
 
 
-'''
-Combines two lists of single test results into one list
-
-Args:
-    test1 (list[str]): First list to be combined
-    test2 (list[str]): Second list to be combined
-
-Returns:
-    list[list[str]]: Combined (and clean-looking) list
-'''
 def combineTestInfo(test1:list[str], test2:list[str]) -> list[str]:
+  '''
+  Combines two lists of single test results into one list
+
+  Args:
+      test1 (list[str]): First list to be combined
+      test2 (list[str]): Second list to be combined
+
+  Returns:
+      list[list[str]]: Combined (and clean-looking) list
+  '''
   # reset tempList
   tempList = []
   # index for adding \n in SG parameter
@@ -167,23 +168,23 @@ def combineTestInfo(test1:list[str], test2:list[str]) -> list[str]:
   return tempList
 
 
-'''
-Using mailMerge to create a COA or Lab Sheet using 
-a Word template and the data extracted by the program
-
-Args:
-    templateName (str): The name of the Word template to use
-    idInfo (list[str]): List of serial number, date, and time
-    cleanData (list[list[str]): The processed list of data of one machine
-    tester (str): Name of tester to be written on the document
-
-Raises:
-    Exception: Template name incorrect
-
-Returns:
-    None
-'''
 def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list[str]], tester:str, c:constants) -> None:
+  '''
+  Using mailMerge to create a COA or Lab Sheet using 
+  a Word template and the data extracted by the program
+
+  Args:
+      templateName (str): The name of the Word template to use
+      idInfo (list[str]): List of serial number, date, and time
+      cleanData (list[list[str]): The processed list of data of one machine
+      tester (str): Name of tester to be written on the document
+
+  Raises:
+      Exception: Template name incorrect
+
+  Returns:
+      None
+  '''
   # open the template using MailMerge
   document = MailMerge('templates/' + templateName)
   # DEBUG: print(document.get_merge_fields())

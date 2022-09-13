@@ -19,18 +19,18 @@ class dataParser():
     self.c = c
 
 
-  '''
-  Main, driving function of this object
-  Combines all functions and parses all data in the given file
-
-  Args:
-      filename (str): Used to open the txt file storing results
-      tester (str): Used to write tester name on the documents
-
-  Returns:
-      None
-  '''
   def generateDocuments(self, filename:str, tester:str) -> None: 
+    '''
+    Main, driving function of this object
+    Combines all functions and parses all data in the given file
+
+    Args:
+        filename (str): Used to open the txt file storing results
+        tester (str): Used to write tester name on the documents
+
+    Returns:
+        None
+    '''
     # gets list of string from openning the inner text file
     f = utils.openTextFile(filename)
 
@@ -69,16 +69,16 @@ class dataParser():
       # print()
 
 
-  '''
-  Gets serial number, date, and time from the txt file
-
-  Args:
-      f (list[str]): txt file in the format of a list of str
-
-  Returns:
-      list[str]: A list storing, in order, the serial number, date, and time
-  '''
   def getIdInfo(self, f:list[str]) -> list[str]:
+    '''
+    Gets serial number, date, and time from the txt file
+
+    Args:
+        f (list[str]): txt file in the format of a list of str
+
+    Returns:
+        list[str]: A list storing, in order, the serial number, date, and time
+    '''
     f = f.copy()
     # line 0 - serial number
     currentLine = f.pop(0)
@@ -104,17 +104,17 @@ class dataParser():
     return [serialNum, date, time]
 
 
-  '''
-  Gets the test data of one machine from f and turns it into a 2D list
-  WARNING: deletes each line from f as the code traverses through f
-
-  Args:
-      f (list[str]): txt file in the format of a list of str
-  
-  Returns:
-      list[list[str]]: A 2D list of string containing results of all tests performed on one machine
-  '''
   def getTests(self, f:list[str]) -> list[list[str]]:
+    '''
+    Gets the test data of one machine from f and turns it into a 2D list
+    WARNING: deletes each line from f as the code traverses through f
+
+    Args:
+        f (list[str]): txt file in the format of a list of str
+    
+    Returns:
+        list[list[str]]: A 2D list of string containing results of all tests performed on one machine
+    '''
     # returning 2d array
     allData = []
     
@@ -138,18 +138,18 @@ class dataParser():
       return [i for i, j in allData]
 
 
-  '''
-  Processes the 2D list outputted by getTests to the format to be written on the documents.
-  Including sorting the list in KOVA order, 'translate' to symbols (when necessary, e.g. (+)), error check, 
-  and combines two lists (tests) of one KOVA to one list
-
-  Args:
-      rawData (list[str]): 2D list of test results, taken straight from the txt
-  
-  Returns:
-      list[list[str]]: A 2D list of string of results of tests from one machine, after processing it to the format written on the documents
-  '''
   def processData(self, rawData:list[list[str]]) -> list[list[str]]:
+    '''
+    Processes the 2D list outputted by getTests to the format to be written on the documents.
+    Including sorting the list in KOVA order, 'translate' to symbols (when necessary, e.g. (+)), error check, 
+    and combines two lists (tests) of one KOVA to one list
+
+    Args:
+        rawData (list[str]): 2D list of test results, taken straight from the txt
+    
+    Returns:
+        list[list[str]]: A 2D list of string of results of tests from one machine, after processing it to the format written on the documents
+    '''
     # list for organized data
     translatedData = utils.translateData(rawData, self.c.dictSymbol)
 
@@ -165,16 +165,16 @@ class dataParser():
             utils.combineTestInfo(translatedData[4], translatedData[5])]
 
 
-  '''
-  Test parameters for two tests and prints & edits item if it's wrong
-
-  Args:
-      f (list[str]): txt file in the format of a list of str
-  
-  Returns:
-      list[list[str]]: A 2D list of string containing results of all tests performed on one machine
-  '''
   def testParameters(self, data:list[list[str]], startInd:int, allowedRanges:list[str], sn:str) -> None:
+    '''
+    Test parameters for two tests and prints & edits item if it's wrong
+
+    Args:
+        f (list[str]): txt file in the format of a list of str
+    
+    Returns:
+        list[list[str]]: A 2D list of string containing results of all tests performed on one machine
+    '''
     # for two tests
     for i in range(startInd, startInd + 2):
       # for each parameter in each test (10 of them)
@@ -187,20 +187,19 @@ class dataParser():
           indexMapping = {0:'0', 1:'3', 2:'1', 3:'4', 4:'2', 5:'5'}
           warn("Machine %s error in test %s, KOVA %s, on element %s, value is %s, should be within %s" % (sn, indexMapping.get(i), int((startInd/2)+1), self.c.PARAMETERS[j], current, allowedRanges[j]))
    
-        
-  '''
-  Writes data to new word doc (COA and Lab Worksheet) using templates
 
-  Args:
-      idInfo (list[str]): serial num, date, and time in a list (as outputted by getIdInfo())
-      cleanData (list[str]): txt file in the format of a list of str
-      tester (str): tester name to be written on to the documents
-  
-  Returns:
-      None
-  '''
-  # writes data to new word doc using template
   def writeData(self, idInfo:list[str], cleanData:list[list[str]], tester:str) -> None:
+    '''
+    Writes data to new word doc (COA and Lab Worksheet) using templates
+
+    Args:
+        idInfo (list[str]): serial num, date, and time in a list (as outputted by getIdInfo())
+        cleanData (list[str]): txt file in the format of a list of str
+        tester (str): tester name to be written on to the documents
+    
+    Returns:
+        None
+    '''
     testerInitial = ''.join(s[0].upper() for s in tester.strip().split(' '))
 
     if not self.hasFailed:

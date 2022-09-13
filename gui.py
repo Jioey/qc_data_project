@@ -1,23 +1,20 @@
-from tkinter import Frame, Menu, Toplevel, Button, Label, Tk, Entry, Text, messagebox, END, NORMAL, DISABLED, LEFT
-from tkinter import filedialog
+from tkinter import Frame, Menu, Toplevel, Button, Label, Tk, Entry, Text, messagebox, filedialog, END, NORMAL, DISABLED, LEFT
 import traceback
-
 from dataParser import dataParser
 from constants import constants
 
-'''
-A simple Tkinter UI that loads a txt file and allows user to enter tester's name
-
-Args:
-      parser (dataParser): A dataParser object to use for processing the data
-      c (constants): reference to the constants obj
-
-Attributes:
-      filename (str): Instance variable that stores the input txt file's name
-      parser (dataParser): Reference to the parser object
-'''
 class App(Tk):
-   # init
+   '''
+   A simple Tkinter UI that loads a txt file and allows user to enter tester's name
+
+   Args:
+         parser (dataParser): A dataParser object to use for processing the data
+         c (constants): reference to the constants obj
+
+   Attributes:
+         filename (str): Instance variable that stores the input txt file's name
+         parser (dataParser): Reference to the parser object
+   '''
    def __init__(self, parser:dataParser, c:constants) -> None:
       super().__init__()
       # using instance variable to store filename
@@ -30,10 +27,11 @@ class App(Tk):
       # inituialize UI
       self.initUI()
 
-   '''
-   Initializes the UI with all its components
-   '''
+
    def initUI(self) -> None:
+      '''
+      Initializes the UI with all its components
+      '''
       self.title("TECO")
       
       # menu bar
@@ -69,11 +67,11 @@ class App(Tk):
       submitButton.pack(fill='both')
 
 
-   '''  
-   Saves filename, reads the file and displays on Text widget
-   Triggers when load button is hit
-   '''
    def onOpen(self) -> None:
+      '''  
+      Saves filename, reads the file and displays on Text widget
+      Triggers when load button is hit
+      '''
       # file types choosable in File Explorer
       ftypes = [('text files', '*.txt'), ('All files', '*')]
       # file dialog
@@ -96,20 +94,20 @@ class App(Tk):
          self.txt.config(state=DISABLED)
 
 
-   '''
-   Runs generateDocuments with the needed info entered from the gui
-   Triggers when submit button is hit
-
-   Args:
-         tester (str): Tester name to be written on the documents
-
-   Raises:
-         Exception: Either filename or tester entry is empty
-
-   Returns:
-         None
-   '''
    def onSubmit(self, tester:str) -> None:
+      '''
+      Runs generateDocuments with the needed info entered from the gui
+      Triggers when submit button is hit
+
+      Args:
+            tester (str): Tester name to be written on the documents
+
+      Raises:
+            Exception: Either filename or tester entry is empty
+
+      Returns:
+            None
+      '''
       # DEBUG: usr input info printed in terminal
       # print("OnSubmit: ")
       # print("filename: %s; tester: %s" % (self.filename, tester))
@@ -140,23 +138,26 @@ class App(Tk):
             messagebox.showerror("Error", errorMsg)
 
    
-   '''
-   Clears Text widget in gui
-   Used to do so after onSubmit()
-
-   Args:
-         txt (Text): The Text widget to clear
-
-   Returns:
-         None
-   '''
    def clearTextWidget(self, txt:Text) -> None:
+      '''
+      Clears Text widget in gui
+      Used to do so after onSubmit()
+
+      Args:
+            txt (Text): The Text widget to clear
+
+      Returns:
+            None
+      '''
       txt.config(state=NORMAL)
       txt.delete(1.0, END)
       txt.config(state=DISABLED)
 
    
    def showConfig(self) -> None:
+      '''
+      Displays the three allowed ranges currently used by the software on a new window
+      '''
       top = Toplevel(self)
       top.title('Allowed Ranges')
       l1 = Label(top, justify=LEFT, font=16,
@@ -166,20 +167,31 @@ class App(Tk):
       top.mainloop()
 
 
-'''
-Shows Bad Machine warning text window (messagebox) with msg
-Then writes it to machineErrors.txt
-
-Args:
-      msg (str): Warning message to be displayed on the messagebox
-
-Returns:
-      None
-'''
 def warn(msg:str) -> None:
+   '''
+   Shows Bad Machine warning text window (messagebox) with msg
+   Then writes it to machineErrors.txt
+
+   Args:
+         msg (str): Warning message to be displayed on the messagebox
+
+   Returns:
+         None
+   '''
    messagebox.showwarning('Warning - Bad Machine', msg)
    with open('machineErrors.txt', 'a', encoding="utf-8") as f:
       f.write(msg + '\n')
 
+
 def showConfirm(action:str='') -> None:
+   '''
+   Shows action confirmation in a text window (messagebox) with action
+   Appends 'successfully' to str to make things easier
+
+   Args:
+         action (str): Action message to confirm
+
+   Returns:
+         None
+   '''
    messagebox.showinfo("TECO",  action + ' successfully')
