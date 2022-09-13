@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module dataParser</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>dataParser</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cjoeyz%5Cdocuments%5Cvisual%20studio%20code%20workspace%5Cfor%20teco%5Cqc_data-project%5Cdataparser.py">c:\users\joeyz\documents\visual studio code workspace\for teco\qc_data-project\dataparser.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="utils.html">utils</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="dataParser.html#dataParser">dataParser</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="dataParser">class <strong>dataParser</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#dataParser">dataParser</a>(c:&nbsp;constants.constants)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;<a href="#dataParser">dataParser</a>&nbsp;file&nbsp;contains&nbsp;all&nbsp;the&nbsp;functionality&nbsp;needed&nbsp;to&nbsp;<br>
+read,&nbsp;parse,&nbsp;process,&nbsp;and&nbsp;wirte&nbsp;the&nbsp;QC&nbsp;results<br>
+&nbsp;<br>
+Attributes:<br>
+&nbsp;&nbsp;sn&nbsp;(str):&nbsp;storing&nbsp;the&nbsp;serial&nbsp;number&nbsp;of&nbsp;the&nbsp;current&nbsp;machine<br>
+&nbsp;&nbsp;hasFailed&nbsp;(bool):&nbsp;stores&nbsp;if&nbsp;the&nbsp;current&nbsp;machine&nbsp;has&nbsp;failed&nbsp;QC<br>
+&nbsp;&nbsp;c&nbsp;(constants):&nbsp;reference&nbsp;to&nbsp;the&nbsp;constants&nbsp;obj<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="dataParser-__init__"><strong>__init__</strong></a>(self, c: constants.constants) -&gt; None</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="dataParser-generateDocuments"><strong>generateDocuments</strong></a>(self, filename: str, tester: str) -&gt; None</dt><dd><tt>Main,&nbsp;driving&nbsp;function&nbsp;of&nbsp;this&nbsp;<a href="builtins.html#object">object</a><br>
+Combines&nbsp;all&nbsp;functions&nbsp;and&nbsp;parses&nbsp;all&nbsp;data&nbsp;in&nbsp;the&nbsp;given&nbsp;file<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;(str):&nbsp;Used&nbsp;to&nbsp;open&nbsp;the&nbsp;txt&nbsp;file&nbsp;storing&nbsp;results<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tester&nbsp;(str):&nbsp;Used&nbsp;to&nbsp;write&nbsp;tester&nbsp;name&nbsp;on&nbsp;the&nbsp;documents<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None</tt></dd></dl>
+
+<dl><dt><a name="dataParser-getIdInfo"><strong>getIdInfo</strong></a>(self, f: list[str]) -&gt; list[str]</dt><dd><tt>Gets&nbsp;serial&nbsp;number,&nbsp;date,&nbsp;and&nbsp;time&nbsp;from&nbsp;the&nbsp;txt&nbsp;file<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;(list[str]):&nbsp;txt&nbsp;file&nbsp;in&nbsp;the&nbsp;format&nbsp;of&nbsp;a&nbsp;list&nbsp;of&nbsp;str<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list[str]:&nbsp;A&nbsp;list&nbsp;storing,&nbsp;in&nbsp;order,&nbsp;the&nbsp;serial&nbsp;number,&nbsp;date,&nbsp;and&nbsp;time</tt></dd></dl>
+
+<dl><dt><a name="dataParser-getTests"><strong>getTests</strong></a>(self, f: list[str]) -&gt; list[list[str]]</dt><dd><tt>Gets&nbsp;the&nbsp;test&nbsp;data&nbsp;of&nbsp;one&nbsp;machine&nbsp;from&nbsp;f&nbsp;and&nbsp;turns&nbsp;it&nbsp;into&nbsp;a&nbsp;2D&nbsp;list<br>
+WARNING:&nbsp;deletes&nbsp;each&nbsp;line&nbsp;from&nbsp;f&nbsp;as&nbsp;the&nbsp;code&nbsp;traverses&nbsp;through&nbsp;f<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;(list[str]):&nbsp;txt&nbsp;file&nbsp;in&nbsp;the&nbsp;format&nbsp;of&nbsp;a&nbsp;list&nbsp;of&nbsp;str<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list[list[str]]:&nbsp;A&nbsp;2D&nbsp;list&nbsp;of&nbsp;string&nbsp;containing&nbsp;results&nbsp;of&nbsp;all&nbsp;tests&nbsp;performed&nbsp;on&nbsp;one&nbsp;machine</tt></dd></dl>
+
+<dl><dt><a name="dataParser-processData"><strong>processData</strong></a>(self, rawData: list[list[str]]) -&gt; list[list[str]]</dt><dd><tt>Processes&nbsp;the&nbsp;2D&nbsp;list&nbsp;outputted&nbsp;by&nbsp;getTests&nbsp;to&nbsp;the&nbsp;format&nbsp;to&nbsp;be&nbsp;written&nbsp;on&nbsp;the&nbsp;documents.<br>
+Including&nbsp;sorting&nbsp;the&nbsp;list&nbsp;in&nbsp;KOVA&nbsp;order,&nbsp;'translate'&nbsp;to&nbsp;symbols&nbsp;(when&nbsp;necessary,&nbsp;e.g.&nbsp;(+)),&nbsp;error&nbsp;check,&nbsp;<br>
+and&nbsp;combines&nbsp;two&nbsp;lists&nbsp;(tests)&nbsp;of&nbsp;one&nbsp;KOVA&nbsp;to&nbsp;one&nbsp;list<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rawData&nbsp;(list[str]):&nbsp;2D&nbsp;list&nbsp;of&nbsp;test&nbsp;results,&nbsp;taken&nbsp;straight&nbsp;from&nbsp;the&nbsp;txt<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list[list[str]]:&nbsp;A&nbsp;2D&nbsp;list&nbsp;of&nbsp;string&nbsp;of&nbsp;results&nbsp;of&nbsp;tests&nbsp;from&nbsp;one&nbsp;machine,&nbsp;after&nbsp;processing&nbsp;it&nbsp;to&nbsp;the&nbsp;format&nbsp;written&nbsp;on&nbsp;the&nbsp;documents</tt></dd></dl>
+
+<dl><dt><a name="dataParser-testParameters"><strong>testParameters</strong></a>(self, data: list[list[str]], startInd: int, allowedRanges: list[str], sn: str) -&gt; None</dt><dd><tt>Test&nbsp;parameters&nbsp;for&nbsp;two&nbsp;tests&nbsp;and&nbsp;prints&nbsp;&amp;&nbsp;edits&nbsp;item&nbsp;if&nbsp;it's&nbsp;wrong<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;(list[str]):&nbsp;txt&nbsp;file&nbsp;in&nbsp;the&nbsp;format&nbsp;of&nbsp;a&nbsp;list&nbsp;of&nbsp;str<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list[list[str]]:&nbsp;A&nbsp;2D&nbsp;list&nbsp;of&nbsp;string&nbsp;containing&nbsp;results&nbsp;of&nbsp;all&nbsp;tests&nbsp;performed&nbsp;on&nbsp;one&nbsp;machine</tt></dd></dl>
+
+<dl><dt><a name="dataParser-writeData"><strong>writeData</strong></a>(self, idInfo: list[str], cleanData: list[list[str]], tester: str) -&gt; None</dt><dd><tt>Writes&nbsp;data&nbsp;to&nbsp;new&nbsp;word&nbsp;doc&nbsp;(COA&nbsp;and&nbsp;Lab&nbsp;Worksheet)&nbsp;using&nbsp;templates<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;idInfo&nbsp;(list[str]):&nbsp;serial&nbsp;num,&nbsp;date,&nbsp;and&nbsp;time&nbsp;in&nbsp;a&nbsp;list&nbsp;(as&nbsp;outputted&nbsp;by&nbsp;<a href="#dataParser-getIdInfo">getIdInfo</a>())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cleanData&nbsp;(list[str]):&nbsp;txt&nbsp;file&nbsp;in&nbsp;the&nbsp;format&nbsp;of&nbsp;a&nbsp;list&nbsp;of&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tester&nbsp;(str):&nbsp;tester&nbsp;name&nbsp;to&nbsp;be&nbsp;written&nbsp;on&nbsp;to&nbsp;the&nbsp;documents<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>

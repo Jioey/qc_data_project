@@ -1,25 +1,25 @@
-from tkinter import Button, Frame, Label, Tk, Entry, Text, messagebox, END, NORMAL, DISABLED
-from tkinter import filedialog
+from tkinter import Frame, Menu, Toplevel, Button, Label, Tk, Entry, Text, messagebox, filedialog, END, NORMAL, DISABLED, LEFT
 import traceback
-
 from dataParser import dataParser
+from constants import constants
 
-'''
-A simple Tkinter UI that loads a txt file and allows user to enter tester's name
-
-Args:
-      parser (dataParser): A dataParser object to use for processing the data
-
-Attributes:
-      filename (str): Instance variable that stores the input txt file's name
-      parser (dataParser): Reference to the parser object
-'''
 class App(Tk):
-   # init
-   def __init__(self, parser:dataParser) -> None:
+   '''
+   A simple Tkinter UI that loads a txt file and allows user to enter tester's name
+
+   Args:
+         parser (dataParser): A dataParser object to use for processing the data
+         c (constants): reference to the constants obj
+
+   Attributes:
+         filename (str): Instance variable that stores the input txt file's name
+         parser (dataParser): Reference to the parser object
+   '''
+   def __init__(self, parser:dataParser, c:constants) -> None:
       super().__init__()
       # using instance variable to store filename
       self.filename = ''
+      self.c = c
       # reference to the parser obj
       self.parser = parser
       # setting window geometry
@@ -27,23 +27,33 @@ class App(Tk):
       # inituialize UI
       self.initUI()
 
-   '''
-   Initializes the UI with all its components
-   '''
+
    def initUI(self) -> None:
-      # packing self (the Frame)
+      '''
+      Initializes the UI with all its components
+      '''
       self.title("TECO")
-      # another frame for tester input
-      testerFrame = Frame(self)
+      
+      # menu bar
+      menubar = Menu(self)
+      configMenu = Menu(menubar, tearoff=0)
+      configMenu.add_command(label="Update Ranges from Config File", command=lambda:[print("Loading config file..."), self.c.loadYaml(), self.c.updateTemplateRange(), showConfirm('Constants loaded and templates updated')])
+      # configMenu.add_command(label="Update Configs from COA Template", command=lambda:[self.c.updateConstants, showConfirm('Configs updated')])
+      configMenu.add_command(label="Show Allowed Ranges", command=self.showConfig)
+      menubar.add_cascade(label="Config", menu=configMenu)
+      
+      self.config(menu=menubar)
 
       # button to load file
       loadButton = Button(self, text="Load File", command=self.onOpen)
       # displayed text to prompt tester name
+      # add a frame for tester input
+      testerFrame = Frame(self)
       testerLabel = Label(testerFrame, text='Tester name: ')
       # text Entry to enter tester name
       testerEntry = Entry(testerFrame)
       # submit button that triggers generateDocuments and clears text widgets
-      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), testerEntry.delete(0, END), self.txt.delete(1.0, END)])
+      submitButton = Button(self, text="Submit", command=lambda:[self.onSubmit(testerEntry.get()), self.clearTextWidget(self.txt)])
       # Text widget that displays loaded file & read only
       self.txt = Text(self)
       self.txt.config(state=DISABLED)
@@ -57,11 +67,11 @@ class App(Tk):
       submitButton.pack(fill='both')
 
 
-   '''  
-   Saves filename, reads the file and displays on Text widget
-   Triggers when load button is hit
-   '''
    def onOpen(self) -> None:
+      '''  
+      Saves filename, reads the file and displays on Text widget
+      Triggers when load button is hit
+      '''
       # file types choosable in File Explorer
       ftypes = [('text files', '*.txt'), ('All files', '*')]
       # file dialog
@@ -84,17 +94,23 @@ class App(Tk):
          self.txt.config(state=DISABLED)
 
 
-   '''
-   Runs generateDocuments with the needed info entered from the gui
-   Triggers when submit button is hit
-
-   Raises:
-         Exception: Either filename or tester entry is empty
-   '''
    def onSubmit(self, tester:str) -> None:
+      '''
+      Runs generateDocuments with the needed info entered from the gui
+      Triggers when submit button is hit
+
+      Args:
+            tester (str): Tester name to be written on the documents
+
+      Raises:
+            Exception: Either filename or tester entry is empty
+
+      Returns:
+            None
+      '''
       # DEBUG: usr input info printed in terminal
-      print("OnSubmit: ")
-      print("filename: %s; tester: %s" % (self.filename, tester))
+      # print("OnSubmit: ")
+      # print("filename: %s; tester: %s" % (self.filename, tester))
 
       if (self.filename == ''):
          # if filename is empty
@@ -104,17 +120,16 @@ class App(Tk):
          # if tester is empty
          messagebox.showerror("Error", "No tester name has been entered")
          raise Exception("tester empty")
+      elif (len(tester.strip().split(" ")) != 2):
+         messagebox.showwarning("Warning", "Tester name has been entered incorrectly\nPlease use the 'FirstName LastInitial.' format")
+         raise Exception("tester name incorrect")
       else:
          # if both fields are entered
          try:
             # try generating data
             self.parser.generateDocuments(self.filename, tester)
-            # if (self.parser.isErrorMachine):
-            #    # shows warning text window
-            #    for msg in self.parser.errMsgList:
-            #       messagebox.showwarning('Warning - Bad Machine', msg)
             # Generated documents comfirmation
-            messagebox.showinfo("TECO",  "Documents generated successfully")
+            showConfirm("Documents generated")
          except Exception as e:
             # print traceback msg
             traceback.print_exc()
@@ -122,9 +137,61 @@ class App(Tk):
             errorMsg = "Code error: %s; see full traceback in terminal" % e
             messagebox.showerror("Error", errorMsg)
 
+   
+   def clearTextWidget(self, txt:Text) -> None:
+      '''
+      Clears Text widget in gui
+      Used to do so after onSubmit()
 
-'''
-shows warning text window
-'''
-def warn(msg):
+      Args:
+            txt (Text): The Text widget to clear
+
+      Returns:
+            None
+      '''
+      txt.config(state=NORMAL)
+      txt.delete(1.0, END)
+      txt.config(state=DISABLED)
+
+   
+   def showConfig(self) -> None:
+      '''
+      Displays the three allowed ranges currently used by the software on a new window
+      '''
+      top = Toplevel(self)
+      top.title('Allowed Ranges')
+      l1 = Label(top, justify=LEFT, font=16,
+                  text= 'KOVA I: %s\nKOVA II: %s\nKOVA III: %s' %
+                  (str(self.c.allowedRangesI), str(self.c.allowedRangesII), str(self.c.allowedRangesIII)))
+      l1.pack()
+      top.mainloop()
+
+
+def warn(msg:str) -> None:
+   '''
+   Shows Bad Machine warning text window (messagebox) with msg
+   Then writes it to machineErrors.txt
+
+   Args:
+         msg (str): Warning message to be displayed on the messagebox
+
+   Returns:
+         None
+   '''
    messagebox.showwarning('Warning - Bad Machine', msg)
+   with open('machineErrors.txt', 'a', encoding="utf-8") as f:
+      f.write(msg + '\n')
+
+
+def showConfirm(action:str='') -> None:
+   '''
+   Shows action confirmation in a text window (messagebox) with action
+   Appends 'successfully' to str to make things easier
+
+   Args:
+         action (str): Action message to confirm
+
+   Returns:
+         None
+   '''
+   messagebox.showinfo("TECO",  action + ' successfully')

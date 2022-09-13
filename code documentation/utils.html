@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module utils</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>utils</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cjoeyz%5Cdocuments%5Cvisual%20studio%20code%20workspace%5Cfor%20teco%5Cqc_data-project%5Cutils.py">c:\users\joeyz\documents\visual studio code workspace\for teco\qc_data-project\utils.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="lxml.html">lxml</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-checkLastLine"><strong>checkLastLine</strong></a>(f: list[str]) -&gt; None</dt><dd><tt>Checks&nbsp;the&nbsp;line&nbsp;after&nbsp;a&nbsp;test&nbsp;and&nbsp;determine&nbsp;if&nbsp;it&nbsp;should&nbsp;pop&nbsp;an&nbsp;extra&nbsp;line&nbsp;(a&nbsp;warning&nbsp;line),<br>
+pop&nbsp;only&nbsp;one&nbsp;line&nbsp;(the&nbsp;empty&nbsp;line&nbsp;between&nbsp;tests),&nbsp;or&nbsp;don't&nbsp;do&nbsp;anything&nbsp;(when&nbsp;there&nbsp;is&nbsp;no&nbsp;empty&nbsp;line&nbsp;between&nbsp;tests)<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;(list[str]):&nbsp;Used&nbsp;as&nbsp;reference&nbsp;to&nbsp;the&nbsp;full&nbsp;file<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-combineTestInfo"><strong>combineTestInfo</strong></a>(test1: list[str], test2: list[str]) -&gt; list[str]</dt><dd><tt>Combines&nbsp;two&nbsp;lists&nbsp;of&nbsp;single&nbsp;test&nbsp;results&nbsp;into&nbsp;one&nbsp;list<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;test1&nbsp;(list[str]):&nbsp;First&nbsp;list&nbsp;to&nbsp;be&nbsp;combined<br>
+&nbsp;&nbsp;&nbsp;&nbsp;test2&nbsp;(list[str]):&nbsp;Second&nbsp;list&nbsp;to&nbsp;be&nbsp;combined<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list[list[str]]:&nbsp;Combined&nbsp;(and&nbsp;clean-looking)&nbsp;list</tt></dd></dl>
+ <dl><dt><a name="-getTest"><strong>getTest</strong></a>(f: list[str]) -&gt; tuple[list[str], str]</dt><dd><tt>Gets&nbsp;data&nbsp;of&nbsp;one&nbsp;test&nbsp;from&nbsp;f&nbsp;and&nbsp;turns&nbsp;it&nbsp;into&nbsp;a&nbsp;list<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;(list[str]):&nbsp;The&nbsp;arg&nbsp;is&nbsp;used&nbsp;as&nbsp;reference&nbsp;to&nbsp;the&nbsp;full&nbsp;file<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list[str]:&nbsp;Data/The&nbsp;list&nbsp;of&nbsp;results&nbsp;of&nbsp;one&nbsp;test<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int:&nbsp;kovaKey&nbsp;based&nbsp;on&nbsp;kovaId</tt></dd></dl>
+ <dl><dt><a name="-mailmergeToTemplates"><strong>mailmergeToTemplates</strong></a>(templateName: str, idInfo: list[str], cleanData: list[list[str]], tester: str, c: constants.constants) -&gt; None</dt><dd><tt>Using&nbsp;mailMerge&nbsp;to&nbsp;create&nbsp;a&nbsp;COA&nbsp;or&nbsp;Lab&nbsp;Sheet&nbsp;using&nbsp;<br>
+a&nbsp;Word&nbsp;template&nbsp;and&nbsp;the&nbsp;data&nbsp;extracted&nbsp;by&nbsp;the&nbsp;program<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;templateName&nbsp;(str):&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;Word&nbsp;template&nbsp;to&nbsp;use<br>
+&nbsp;&nbsp;&nbsp;&nbsp;idInfo&nbsp;(list[str]):&nbsp;List&nbsp;of&nbsp;serial&nbsp;number,&nbsp;date,&nbsp;and&nbsp;time<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cleanData&nbsp;(list[list[str]):&nbsp;The&nbsp;processed&nbsp;list&nbsp;of&nbsp;data&nbsp;of&nbsp;one&nbsp;machine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tester&nbsp;(str):&nbsp;Name&nbsp;of&nbsp;tester&nbsp;to&nbsp;be&nbsp;written&nbsp;on&nbsp;the&nbsp;document<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Exception:&nbsp;Template&nbsp;name&nbsp;incorrect<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-openTextFile"><strong>openTextFile</strong></a>(filename: str) -&gt; list[str]</dt><dd><tt>Opens&nbsp;text&nbsp;file&nbsp;and&nbsp;returns&nbsp;a&nbsp;copy&nbsp;of&nbsp;it&nbsp;as&nbsp;a&nbsp;list&nbsp;of&nbsp;string<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;(str):&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;be&nbsp;opened<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;(list[str]):&nbsp;The&nbsp;text&nbsp;file's&nbsp;content&nbsp;in&nbsp;list&nbsp;format</tt></dd></dl>
+ <dl><dt><a name="-translateData"><strong>translateData</strong></a>(rawData: list[list[str]], dictSymbol: dict) -&gt; list[list[str]]</dt><dd><tt>'Translates'&nbsp;data&nbsp;-&nbsp;replaces&nbsp;words&nbsp;with&nbsp;symbols&nbsp;based&nbsp;on&nbsp;constants.dictSymbol<br>
+e.g.&nbsp;'Positive'&nbsp;to&nbsp;'(+)'<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rawData&nbsp;(list[list[str]):&nbsp;The&nbsp;list&nbsp;of&nbsp;data,&nbsp;from&nbsp;results&nbsp;of&nbsp;one&nbsp;machine,&nbsp;to&nbsp;be&nbsp;translated<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;(list[list[str]):&nbsp;The&nbsp;translated&nbsp;list&nbsp;of&nbsp;results</tt></dd></dl>
+</td></tr></table>
+</body></html>

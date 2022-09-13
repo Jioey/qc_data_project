@@ -1,18 +1,17 @@
 import lxml
 from mailmerge import MailMerge
-# import constants
-import constants
+from constants import constants
 
-'''
-Opens text file and returns a copy of it as a list of string
-
-Args:
-    filename (str): The name of the file to be opened
-
-Returns:
-    f (list[str]): The text file's content in list format
-'''
 def openTextFile(filename:str) -> list[str]:
+  '''
+  Opens text file and returns a copy of it as a list of string
+
+  Args:
+      filename (str): The name of the file to be opened
+
+  Returns:
+      f (list[str]): The text file's content in list format
+  '''
   # open file
   rawFile = open(filename, "r")
   # DEBUG: rawFile = open("demotextOld.txt", "r")
@@ -20,8 +19,9 @@ def openTextFile(filename:str) -> list[str]:
   # turn into list of string and have a copy of original
   f = rawFile.readlines()
 
-  # add an empty line - don't know why but fixed bug?
-  f.append([''])
+  # add lines for program to determine the end of the file
+  f.append('')
+  f.append('')
 
   # close file
   rawFile.close()
@@ -30,19 +30,20 @@ def openTextFile(filename:str) -> list[str]:
   return f.copy()
 
 
-'''
-Gets data of one test from f and turns it into a list
+def getTest(f:list[str]) -> tuple[list[str], str]:
+  '''
+  Gets data of one test from f and turns it into a list
 
-Args:
-    f (list[str]): The arg is used as reference to the full file
+  Args:
+      f (list[str]): The arg is used as reference to the full file
 
-Returns:
-    data (list[str]): The list of results of one test
-'''
-def getTest(f:list[str]) -> list[str]:
+  Returns:
+      list[str]: Data/The list of results of one test
+      int: kovaKey based on kovaId
+  '''
   # pop out info lines (top)
   f.pop(0)
-  f.pop(0)
+  kovaID = list(filter(None, f.pop(0).split("|")))[2] # Includes patient id, used for identifying KOVA test
   f.pop(0)
 
   # get the data
@@ -54,70 +55,62 @@ def getTest(f:list[str]) -> list[str]:
     currentLine = list(filter(None, currentLine.split("|")))
     # DEBUG: print(currentLine)
     # add the data to the data list
-    data.append(parseResultStr(currentLine[5]))
+    data.append(currentLine[4])
 
-  # DEBUG: print(''.join(data, '\n'))
+  # reverse order for order on document
+  data.reverse()
+
+  # DEBUG: print(data)
 
   # removes an extra line if there is 
-  checkWarningLine(f)
+  checkLastLine(f)
   
-  return data
+  # replace w number representing kovaID and raise exception if none found
+  kovaKey = {'QUICKTEST':0, 'KOVA I':1, 'KOVA II':2, 'KOVA III':3}.get(kovaID.upper())
+  if kovaKey == None:
+    raise Exception("Patient ID invalid")
+
+  return data, kovaKey
 
 
-'''
-Takes a unparsed string of a data point 
-and extracts the substring of the data point
+def checkLastLine(f:list[str]) -> None:  
+  '''
+  Checks the line after a test and determine if it should pop an extra line (a warning line),
+  pop only one line (the empty line between tests), or don't do anything (when there is no empty line between tests)
 
-Args:
-    s (str): The unparsed string
+  Args:
+      f (list[str]): Used as reference to the full file
 
-Returns:
-    s (str): The parsed string
-'''
-def parseResultStr(s:str) -> str:
-  # split into list of words
-  s = s.split(' ')
-  # get rid of empty items in list
-  s = [i for i in s if i]
-  # remove '*' if it's in list
-  if '*' in s: s.remove('*')
-  # remove '*' if it's in the word (index 0 would be the data we're interested in)
-  s = s[0].replace('*', '')
-
-  return s
-
-
-'''
-Checks if there is a CSR warning line at the end of a test
-and removes it if there is 
-
-Args:
-    f (list[str]): Used as reference to the full file
-
-Returns:
-    True if a CSR line is removed and False if not
-'''
-def checkWarningLine(f:list[str]) -> bool:
-  # empty string considered False
-  # if line is not empty (meaning it's CSR Warning), then pop another line
-  # if not then if-statement pop takes away empty line 14  
-  if f.pop(0)[0:3] == 'NTE':
+  Returns:
+      None
+  '''
+  # DEBUG: print("f[0] here is: %s" % f[0])
+  # if next line starts w NTE, meaning it is a warning line -> pop
+  if f[0][0:3] == 'NTE':
     # DEBUG: print('CSR Line found')
     f.pop(0)
-    return True
-  return False
 
-'''
-'Translates' data - replaces words with symbols based on constants.dictSymbol
-e.g. 'Positive' to '(+)'
+  # if next line does not have MSH, meaning it is an empty line btwn tests -> pop
+  if f[0][1:4] != 'MSH':
+    # DEBUG: print("empty line poped")
+    f.pop(0)
+  # note: empty line has undeterminable hidden char, so I did it this way 
+  # (had to add an extra line at end of file when imported to work w that)
 
-Args:
-    rawData (list[list[str]): The list of data, from results of one machine, to be translated
+  # do not pop another line if MSH is there, meaning start of next test
 
-Returns:
-    data (list[list[str]): The translated list of results
-'''
-def translateData(rawData:list[list[str]]) -> list[list[str]]:
+
+def translateData(rawData:list[list[str]], dictSymbol:dict) -> list[list[str]]:
+  '''
+  'Translates' data - replaces words with symbols based on constants.dictSymbol
+  e.g. 'Positive' to '(+)'
+
+  Args:
+      rawData (list[list[str]): The list of data, from results of one machine, to be translated
+
+  Returns:
+      data (list[list[str]): The translated list of results
+  '''
   data = []
   # TRANSLATION (size, +/-, and trace)
   # for each test in rawData
@@ -127,7 +120,7 @@ def translateData(rawData:list[list[str]]) -> list[list[str]]:
     tempList = []
     for item in test:
       # DEBUG: print("item: " + item, end=" ")
-      for word, symbol in constants.dictSymbol.items():
+      for word, symbol in dictSymbol.items():
         # replace item string
         item = item.replace(word, symbol)
       # DEBUG: print("trans: " + item, end=" ")
@@ -145,22 +138,17 @@ def translateData(rawData:list[list[str]]) -> list[list[str]]:
   return data
 
 
-"""
-##combineTestInfo(test1, test2)
-Combine two tests into one list
-Returns combined, clean list
-"""
-'''
-Combines two lists of single test results into one list
-
-Args:
-    test1 (list[str]): First list to be combined
-    test2 (list[str]): Second list to be combined
-
-Returns:
-    list[list[str]]: Combined (and clean-looking) list
-'''
 def combineTestInfo(test1:list[str], test2:list[str]) -> list[str]:
+  '''
+  Combines two lists of single test results into one list
+
+  Args:
+      test1 (list[str]): First list to be combined
+      test2 (list[str]): Second list to be combined
+
+  Returns:
+      list[list[str]]: Combined (and clean-looking) list
+  '''
   # reset tempList
   tempList = []
   # index for adding \n in SG parameter
@@ -180,23 +168,23 @@ def combineTestInfo(test1:list[str], test2:list[str]) -> list[str]:
   return tempList
 
 
-'''
-Using mailMerge to create a COA or Lab Sheet using 
-a Word template and the data extracted by the program
+def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list[str]], tester:str, c:constants) -> None:
+  '''
+  Using mailMerge to create a COA or Lab Sheet using 
+  a Word template and the data extracted by the program
 
-Args:
-    templateName (str): The name of the Word template to use
-    idInfo (list[str]): List of serial number, date, and time
-    cleanData (list[list[str]): The processed list of data of one machine
-    tester (str): Name of tester to be written on the document
+  Args:
+      templateName (str): The name of the Word template to use
+      idInfo (list[str]): List of serial number, date, and time
+      cleanData (list[list[str]): The processed list of data of one machine
+      tester (str): Name of tester to be written on the document
 
-Raises:
-    Exception: Template name incorrect
+  Raises:
+      Exception: Template name incorrect
 
-Returns:
-    None
-'''
-def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list[str]], tester:str) -> None:
+  Returns:
+      None
+  '''
   # open the template using MailMerge
   document = MailMerge('templates/' + templateName)
   # DEBUG: print(document.get_merge_fields())
@@ -214,22 +202,27 @@ def mailmergeToTemplates(templateName:str, idInfo:list[str], cleanData:list[list
     # for each parameter in each control
     for j in range(10):
       # concatinate merge field/name; starting with 'KOVA-I_LEU' (KOVA-[controlNumber]_[parameterName])
-      mergeField = 'KOVA-' + kovaNumber + '_' + constants.PARAMETERS[j]
+      mergeField = 'KOVA-' + kovaNumber + '_' + c.PARAMETERS[j]
       # merge added field to corresponding data of index
       document.merge(**{mergeField:cleanData[i][j]})
     kovaNumber = kovaNumber + 'I'
 
   # set filename based on if QC failed and which document it is (using template name)
-  if (templateName == constants.COA_TEMPLATE_NAME):
+  if (templateName == c.COA_TEMPLATE_NAME):
     fname = 'documents/' + str(idInfo[0]) + '.docx'
-  elif (templateName == constants.LABSHEET_TEMPLATE_NAME):
+  elif (templateName == c.LABSHEET_TEMPLATE_NAME):
     fname = 'documents/' + str(idInfo[0]) + ' QC Lab Worksheet' + '.docx'
-  elif (templateName == constants.COA_FAILED_TEMPLATE_NAME):
+  elif (templateName == c.COA_FAILED_TEMPLATE_NAME):
     fname = 'failed documents/!' + str(idInfo[0]) + ' - Failed QC' + '.docx'
-  elif (templateName == constants.LABSHEET_FAILED_TEMPLATE_NAME):
+  elif (templateName == c.LABSHEET_FAILED_TEMPLATE_NAME):
     fname = 'failed documents/!' + str(idInfo[0]) + ' QC Lab Worksheet - Failed QC' + '.docx'
   else:
     raise Exception("Template name incorrect")
 
   # write new file
   document.write(fname)
+
+
+# for debug use
+if __name__ == '__main__':
+  openTextFile('../(905)demotext.txt')
