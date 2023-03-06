@@ -10,7 +10,7 @@ from constants import constants
 
 if __name__ == '__main__':
     '''
-    For 905 update of the TC-201
+    For ethernet update of the TC-201 v.230207
     '''
     c = constants()
     # root of tkinter

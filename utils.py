@@ -63,7 +63,7 @@ def getTest(f:list[str]) -> tuple[list[str], str]:
   # DEBUG: print(data)
 
   # removes an extra line if there is 
-  checkLastLine(f)
+  removeLastLine(f)
   
   # replace w number representing kovaID and raise exception if none found
   kovaKey = {'QUICKTEST':0, 'KOVA I':1, 'KOVA II':2, 'KOVA III':3}.get(kovaID.upper())
@@ -73,7 +73,7 @@ def getTest(f:list[str]) -> tuple[list[str], str]:
   return data, kovaKey
 
 
-def checkLastLine(f:list[str]) -> None:  
+def removeLastLine(f:list[str]) -> None:  
   '''
   Checks the line after a test and determine if it should pop an extra line (a warning line),
   pop only one line (the empty line between tests), or don't do anything (when there is no empty line between tests)
@@ -90,12 +90,12 @@ def checkLastLine(f:list[str]) -> None:
     # DEBUG: print('CSR Line found')
     f.pop(0)
 
-  # if next line does not have MSH, meaning it is an empty line btwn tests -> pop
-  if f[0][1:4] != 'MSH':
-    # DEBUG: print("empty line poped")
+  # if next lines does not have MSH, meaning it is an empty line btwn tests -> pop
+  while (len(f) > 0 and "MSH" not in f[0]):
+    # DEBUG: 
+    print("empty line poped " + "\"" + f[0] + "\"")
     f.pop(0)
-  # note: empty line has undeterminable hidden char, so I did it this way 
-  # (had to add an extra line at end of file when imported to work w that)
+  # note: empty line has undeterminable hidden char
 
   # do not pop another line if MSH is there, meaning start of next test
 
